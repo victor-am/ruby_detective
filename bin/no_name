@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
 require_relative '../lib/no_name'
-parser = NoName::FileParser.new(ARGV[0])
-parser.parse
-puts parser.constants
+parser = NoName::Report.new(ARGV[0])
+parser.run
