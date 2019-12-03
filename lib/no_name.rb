@@ -3,3 +3,4 @@ end
 
 require_relative 'no_name/report'
 require_relative 'no_name/file_parser'
+require_relative 'no_name/errors'

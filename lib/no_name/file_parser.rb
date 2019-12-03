@@ -92,7 +92,7 @@ module NoName
         when 1
           register_constant_as_inheritance(constant_name)
         else
-          raise "Unexpected AST structure, please report this issue on github :x"
+          raise Errors::UnexpectedASTStructure
         end
       when :module
         register_constant_as_module(constant_name)
