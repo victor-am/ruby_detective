@@ -20,36 +20,23 @@ module NoName
         inherited_class_constant.constant_name
       end
 
-      def class_definitions
-        super << build_class_definition_object
-      end
-
-      private
-
-      def build_class_definition_object
-        Definitions::ClassDeclaration.new(
-          class_name,
-          namespace: namespace,
-          inherited_class: inherited_class_name,
-          file_path: file_path,
-          dependencies: []
-        )
-      end
-
       # The content of this method is kinda hacky since we need the namespaces
       # during the initial rich AST building phase, while it would only be
       # available at the next phase when we have all the child nodes sorted out
+      PREPENDED_NAMESPACE_NODE_INDEX = 0
       def namespace
-        prepended_namespace = ast_node.children[CLASS_NAME_NODE_INDEX].children[0]
+        prepended_namespace = ast_node.children[CLASS_NAME_NODE_INDEX].children[PREPENDED_NAMESPACE_NODE_INDEX]
 
         # This condition is true when we have a class declaration with inline
         # namespace, like this: class MyNamespace::MyClass
         if prepended_namespace != nil
-          @namespace + recursively_extract_namespaces(prepended_namespace)
+          @namespace + [early_class_name] + recursively_extract_namespaces(prepended_namespace)
         else
-          @namespace
+          @namespace + [early_class_name]
         end
       end
+
+      private
 
       def recursively_extract_namespaces(node, accumulator = [])
         return accumulator.reverse if node.nil?
@@ -57,6 +44,13 @@ module NoName
         namespace = node.children[1]
         accumulator << namespace
         recursively_extract_namespaces(node.children[0], accumulator)
+      end
+
+      # This is a hack since we need the class name during the initial rich AST
+      # building phase, while it would only be available at the next phase when
+      # we have all the child nodes sorted out
+      def early_class_name
+        raw_children[CLASS_NAME_NODE_INDEX].children[1]
       end
     end
   end

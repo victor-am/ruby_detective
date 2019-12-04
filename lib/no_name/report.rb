@@ -13,19 +13,22 @@ module NoName
     def run
       puts "Starting!!"
 
-      Dir.glob("#{project_path}/app/**/*.rb") do |file_path|
+      Dir.glob("#{project_path}/**/*.rb") do |file_path|
         file = FileParser.new(file_path)
         file.parse
         @files << file
+        @classes += file.analysis.classes
       end
 
-      @classes = @files.map(&:class_definitions).flatten
-
       classes[0..25].each do |c|
-        puts "[ Class ] ----------------"
+        puts "---------------------------------------"
         puts c.name.to_s + ' < ' + c.inherited_class.to_s
+        puts " "
         puts 'File path: ' + c.file_path
         puts 'Namespace: ' + c.namespace.to_s
+        puts " "
+        puts "-[ Dependencies ]-"
+        c.constants_referenced.each { |c| puts c }
       end
     end
   end

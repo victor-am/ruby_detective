@@ -10,27 +10,6 @@ module NoName
         @children = []
       end
 
-      def process_all_children!
-        raw_children.each do |raw_child_node|
-          child_node = RichNodes::Factory.build(
-            raw_child_node,
-            namespace: inherited_namespace,
-            file_path: file_path
-          )
-
-          child_node.process_all_children!
-          @children << child_node
-        end
-      end
-
-      def class_definitions
-        children.map(&:class_definitions).flatten.uniq
-      end
-
-      def module_definitions
-        children.map(&:module_definitions).flatten.uniq
-      end
-
       def class_declaration_node?
         type == :class
       end
@@ -47,18 +26,35 @@ module NoName
         type == :value
       end
 
-      private
-
       def type
         ast_node.type
       end
 
-      def raw_children
-        ast_node.children
+      def query_class_declarations(*args)
+        RichNodes::Query.new(self).class_declarations(*args)
       end
 
-      def inherited_namespace
-        namespace
+      def query_constant_references(*args)
+        RichNodes::Query.new(self).constant_references(*args)
+      end
+
+      def process_all_children!
+        raw_children.each do |raw_child_node|
+          child_node = RichNodes::Factory.build(
+            raw_child_node,
+            namespace: namespace,
+            file_path: file_path
+          )
+
+          child_node.process_all_children!
+          @children << child_node
+        end
+      end
+
+      private
+
+      def raw_children
+        ast_node.children
       end
     end
   end

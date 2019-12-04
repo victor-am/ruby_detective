@@ -8,8 +8,11 @@ require_relative 'no_name/errors'
 require_relative 'no_name/report'
 require_relative 'no_name/file_parser'
 
+require_relative 'no_name/rich_ast_analyzer'
+
 require_relative 'no_name/definitions/class_declaration'
 
+require_relative 'no_name/rich_nodes/query'
 require_relative 'no_name/rich_nodes/factory'
 require_relative 'no_name/rich_nodes/generic_node'
 require_relative 'no_name/rich_nodes/value_node'

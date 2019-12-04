@@ -10,8 +10,8 @@ module NoName
 
       private
 
-      def inherited_namespace
-        namespace + [early_module_name]
+      def namespace
+        @namespace + [early_module_name]
       end
 
       # This is a hack since we need the module name during the initial rich AST
