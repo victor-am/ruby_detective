@@ -1,12 +1,12 @@
 module NoName
   module RichNodes
     class Factory
-      attr_reader :node, :file_path, :namespace
+      attr_reader :node, :file_path, :parent_node
 
-      def initialize(node, file_path:, namespace: [])
+      def initialize(node, file_path:, parent_node: nil)
         @node = node
         @file_path = file_path
-        @namespace = namespace
+        @parent_node = parent_node
       end
 
       def self.build(*args)
@@ -14,7 +14,7 @@ module NoName
       end
 
       def build
-        node_class.new(node, file_path: file_path, namespace: namespace)
+        node_class.new(node, file_path: file_path, parent_node: parent_node)
       end
 
       private

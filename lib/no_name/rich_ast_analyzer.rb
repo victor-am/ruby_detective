@@ -26,8 +26,7 @@ module NoName
         .uniq
 
       Definitions::ClassDeclaration.new(
-        node.class_name,
-        namespace: node.namespace,
+        node.namespace,
         inherited_class: node.inherited_class_name,
         file_path: node.file_path,
         constant_references: constants
