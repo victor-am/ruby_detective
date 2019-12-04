@@ -1,11 +1,12 @@
 module NoName
   module RichNodes
     class Factory
-      attr_reader :node, :file_path
+      attr_reader :node, :file_path, :namespace
 
-      def initialize(node, file_path:)
+      def initialize(node, file_path:, namespace: [])
         @node = node
         @file_path = file_path
+        @namespace = namespace
       end
 
       def self.build(*args)
@@ -13,21 +14,25 @@ module NoName
       end
 
       def build
-        return ValueNode.new(node, file_path: file_path) if not_an_ast_node?
-
-        case node.type
-        when :class
-          ClassDeclarationNode.new(node, file_path: file_path)
-        when :module
-          ModuleDeclarationNode.new(node, file_path: file_path)
-        when :const
-          ConstantReferenceNode.new(node, file_path: file_path)
-        else
-          GenericNode.new(node, file_path: file_path)
-        end
+        node_class.new(node, file_path: file_path, namespace: namespace)
       end
 
       private
+
+      def node_class
+        return ValueNode if not_an_ast_node?
+
+        case node.type
+        when :class
+          ClassDeclarationNode
+        when :module
+          ModuleDeclarationNode
+        when :const
+          ConstantReferenceNode
+        else
+          GenericNode
+        end
+      end
 
       def not_an_ast_node?
         !node.is_a?(Parser::AST::Node)

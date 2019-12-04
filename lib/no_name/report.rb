@@ -23,8 +23,9 @@ module NoName
 
       classes[0..25].each do |c|
         puts "[ Class ] ----------------"
-        puts c.file_path
         puts c.name.to_s + ' < ' + c.inherited_class.to_s
+        puts 'File path: ' + c.file_path
+        puts 'Namespace: ' + c.namespace.to_s
       end
     end
   end

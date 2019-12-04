@@ -10,6 +10,7 @@ module NoName
       @code = File.read(path)
       @raw_ast = Parser::CurrentRuby.parse(@code)
       @rich_ast = RichNodes::Factory.build(raw_ast, file_path: path)
+      
       rich_ast.process_all_children!
     end
 

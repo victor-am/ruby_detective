@@ -12,7 +12,12 @@ module NoName
 
       def process_all_children!
         raw_children.each do |raw_child_node|
-          child_node = RichNodes::Factory.build(raw_child_node, file_path: file_path)
+          child_node = RichNodes::Factory.build(
+            raw_child_node,
+            namespace: inherited_namespace,
+            file_path: file_path
+          )
+
           child_node.process_all_children!
           @children << child_node
         end
@@ -50,6 +55,10 @@ module NoName
 
       def raw_children
         ast_node.children
+      end
+
+      def inherited_namespace
+        namespace
       end
     end
   end
