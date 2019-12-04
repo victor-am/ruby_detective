@@ -1,5 +1,5 @@
 module NoName
-  class RichASTAnalyzer
+  class RichNodeAnalyzer
     attr_reader :ast, :classes
 
     def initialize(rich_ast)

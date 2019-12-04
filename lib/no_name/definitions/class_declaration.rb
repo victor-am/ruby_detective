@@ -15,6 +15,10 @@ module NoName
         namespace.last
       end
 
+      def full_name
+        namespace.join('::')
+      end
+
       def register_dependencies(dependencies)
         @dependencies += dependencies
       end

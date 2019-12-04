@@ -20,8 +20,10 @@ module NoName
         @classes += file.analysis.classes
       end
 
+      # Move this out of here
       classes.each do |klass|
-        dependencies = klass.constants_referenced.map do |constant|
+        constants = klass.constants_referenced.reject { |c| c == klass.name }
+        dependencies = constants.map do |constant|
           classes.find { |c| c.name == constant }
         end.compact
 
@@ -38,7 +40,7 @@ module NoName
         puts "-[ Constants referenced ]-"
         c.constants_referenced.each { |c| puts c }
         puts "-[ Dependencies detected ]-"
-        c.dependencies.each { |c| puts c.name }
+        c.dependencies.each { |c| puts c.full_name }
       end
     end
   end

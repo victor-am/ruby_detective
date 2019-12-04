@@ -13,7 +13,7 @@ module NoName
 
       rich_ast.process_all_children!
 
-      @analysis = RichASTAnalyzer.new(rich_ast)
+      @analysis = RichNodeAnalyzer.new(rich_ast)
       analysis.analyze
     end
 
