@@ -6,9 +6,9 @@ module NoName
         children[CLASS_NAME_NODE_INDEX].constant_name
       end
 
-      INHERITED_CLASS_NAME_NODE_INDEX = 1
-      def inherited_class_name
-        inherited_class_constant = children[INHERITED_CLASS_NAME_NODE_INDEX]
+      INHERITANCE_CLASS_NAME_NODE_INDEX = 1
+      def inheritance_class_name
+        inherited_class_constant = children[INHERITANCE_CLASS_NAME_NODE_INDEX]
         # If this child isn't a ConstantReference node it means it doesn't
         # have a declared class inheritance
         return unless inherited_class_constant.constant_reference_node?

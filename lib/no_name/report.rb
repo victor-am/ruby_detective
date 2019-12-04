@@ -20,15 +20,25 @@ module NoName
         @classes += file.analysis.classes
       end
 
-      classes[0..25].each do |c|
+      classes.each do |klass|
+        dependencies = klass.constants_referenced.map do |constant|
+          classes.find { |c| c.name == constant }
+        end.compact
+
+        klass.register_dependencies(dependencies)
+      end
+
+      classes.each do |c|
         puts "---------------------------------------"
-        puts c.name.to_s + ' < ' + c.inherited_class.to_s
+        puts c.name.to_s + ' < ' + c.inheritance_class_name.to_s
         puts " "
         puts 'File path: ' + c.file_path
         puts 'Namespace: ' + c.namespace.to_s
         puts " "
-        puts "-[ Dependencies ]-"
+        puts "-[ Constants referenced ]-"
         c.constants_referenced.each { |c| puts c }
+        puts "-[ Dependencies detected ]-"
+        c.dependencies.each { |c| puts c.name }
       end
     end
   end

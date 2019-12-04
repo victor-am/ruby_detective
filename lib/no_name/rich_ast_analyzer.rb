@@ -19,16 +19,16 @@ module NoName
       end
     end
 
-    def build_class_definition_object(node)
+    def build_class_definition_object(class_node)
       constants = ast
-        .query_constant_references(where: { namespace: node.class_name })
+        .query_constant_references(where: { namespace: class_node.class_name })
         .map(&:constant_name)
         .uniq
 
       Definitions::ClassDeclaration.new(
-        node.namespace,
-        inherited_class: node.inherited_class_name,
-        file_path: node.file_path,
+        class_node.namespace,
+        inheritance_class_name: class_node.inheritance_class_name,
+        file_path: class_node.file_path,
         constant_references: constants
       )
     end
