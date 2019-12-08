@@ -9,6 +9,7 @@ require_relative 'no_name/report'
 require_relative 'no_name/file_parser'
 
 require_relative 'no_name/rich_node_analyzer'
+require_relative 'no_name/graph_builder'
 
 require_relative 'no_name/definitions/class_declaration'
 

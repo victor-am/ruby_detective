@@ -38,12 +38,16 @@ module NoName
         ast_node.type
       end
 
-      def query_class_declarations(*args)
-        RichNodes::Query.new(self).class_declarations(*args)
+      def first_line
+        ast_node.loc.line
       end
 
-      def query_constant_references(*args)
-        RichNodes::Query.new(self).constant_references(*args)
+      def last_line
+        ast_node.loc.last_line
+      end
+
+      def query
+        RichNodes::Query.new(self)
       end
 
       # Move this outside

@@ -25,9 +25,24 @@ module NoName
         constants = klass.constants_referenced.reject { |c| c == klass.name }
         dependencies = constants.map do |constant|
           classes.find { |c| c.name == constant }
-        end.compact
+        end.flatten.compact
 
         klass.register_dependencies(dependencies)
+      end
+
+      @classes = classes.group_by(&:full_name).map do |_full_name, group|
+        if group.size == 1
+          group
+        else
+          group.first.merge_information(group[1..-1])
+          [group.first]
+        end
+      end.flatten
+
+      file_path = 'data.json'
+      File.delete(file_path) if File.exist?(file_path)
+      File.open(file_path, 'w') do |file|
+        file << GraphBuilder.new(classes).build
       end
 
       classes.each do |c|

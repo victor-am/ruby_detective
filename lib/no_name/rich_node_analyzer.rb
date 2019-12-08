@@ -14,14 +14,14 @@ module NoName
     private
 
     def build_classes
-      ast.query_class_declarations.map do |class_node|
+      ast.query.class_declarations.map do |class_node|
         build_class_definition_object(class_node)
       end
     end
 
     def build_class_definition_object(class_node)
-      constants = ast
-        .query_constant_references(where: { namespace: class_node.class_name })
+      constants = ast.query
+        .constant_references(where: { namespace: class_node.class_name })
         .map(&:constant_name)
         .uniq
 
@@ -29,7 +29,9 @@ module NoName
         class_node.namespace,
         inheritance_class_name: class_node.inheritance_class_name,
         file_path: class_node.file_path,
-        constant_references: constants
+        constant_references: constants,
+        first_line: class_node.first_line,
+        last_line: class_node.last_line
       )
     end
   end
