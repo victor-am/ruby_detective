@@ -15,7 +15,8 @@ module NoName
           full_name: c.full_name,
           namespace: c.namespace[0..-2].join('::'),
           lines_of_code: c.lines_of_code,
-          dependencies: c.dependencies.map(&:full_name)
+          dependencies: c.dependencies.map(&:full_name),
+          file_path: c.file_path
         }
       end.to_json
     end
