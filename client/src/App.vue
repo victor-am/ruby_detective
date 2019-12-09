@@ -3,10 +3,11 @@
     <div class="toolbar">
       <div class="search-bar">
         <input v-model="classSearchTerm">
+        <button @click="showFullGraph = true; selectedClass = false">Show full graph</button>
       </div>
 
       <ul class="class-list">
-        <li class="class-item" v-for="classData in filteredClassesList" :key="classData.full_name" @click="selectedClass = classData.full_name">
+        <li class="class-item" v-for="classData in filteredClassesList" :key="classData.full_name" @click="selectedClass = classData.full_name; showFullGraph = false">
           {{ classData.full_name }}
         </li>
       </ul>
@@ -31,7 +32,8 @@ export default {
     return {
       classesData: CLASSES_DATA,
       classSearchTerm: '',
-      selectedClass: ''
+      selectedClass: '',
+      showFullGraph: false
     }
   },
   computed: {
@@ -53,6 +55,8 @@ export default {
     },
 
     filteredClassesData() {
+      if (this.showFullGraph == true) { return this.classesData }
+
       const selectedClass = this.selectedClass
 
       const classes = this.classesData.filter((c) => {
