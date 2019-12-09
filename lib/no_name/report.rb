@@ -15,9 +15,11 @@ module NoName
 
       Dir.glob("#{project_path}/**/*.rb") do |file_path|
         file = FileParser.new(file_path)
-        file.parse
-        @files << file
-        @classes += file.analysis.classes
+
+        if file.parse
+          @files << file
+          @classes += file.analysis.classes
+        end
       end
 
       # Move this out of here

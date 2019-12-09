@@ -9,8 +9,9 @@ module NoName
     def parse
       @code = File.read(path)
       @raw_ast = Parser::CurrentRuby.parse(@code)
-      @rich_ast = RichNodes::Factory.build(raw_ast, file_path: path)
+      return false if raw_ast.nil?
 
+      @rich_ast = RichNodes::Factory.build(raw_ast, file_path: path)
       rich_ast.process_all_children!
 
       @analysis = RichNodeAnalyzer.new(rich_ast)
