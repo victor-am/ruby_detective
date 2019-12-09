@@ -3,7 +3,7 @@
     <div class="toolbar">
       <div class="search-bar">
         <input v-model="classSearchTerm">
-        <button @click="showFullGraph = true; selectedClass = false">Show full graph</button>
+        <button @click="showFullGraph = true; selectedClass = false">Show full project graph</button>
       </div>
 
       <ul class="class-list">
