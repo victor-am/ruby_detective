@@ -29,7 +29,12 @@ import DependencyGraph from './components/DependencyGraph.vue'
 import ClassCard from './components/ClassCard.vue'
 import Logo from './assets/logo.svg';
 
-const CLASSES_DATA = require('./data.json')
+let CLASSES_DATA
+if (process.env.NODE_ENV == 'production') {
+  CLASSES_DATA = JSON.parse(document.getElementById("classes-data").innerHTML)
+} else {
+  CLASSES_DATA = require('./data.json')
+}
 
 export default {
   name: 'app',

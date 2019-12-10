@@ -1,4 +1,5 @@
 require 'json'
+require 'erb'
 
 module NoName
   class GraphBuilder
@@ -6,10 +7,12 @@ module NoName
 
     def initialize(classes)
       @classes = classes
+      @erb_template = File.read(File.join(File.dirname(__FILE__), "../../assets/template.html.erb")
+)
     end
 
     def build
-      classes.map do |c|
+      classes_data_as_json = classes.map do |c|
         {
           name: c.name,
           full_name: c.full_name,
@@ -19,6 +22,8 @@ module NoName
           file_path: c.file_path
         }
       end.to_json
+
+      ERB.new(@erb_template).result(binding)
     end
   end
 end

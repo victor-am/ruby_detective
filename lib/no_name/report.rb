@@ -41,23 +41,10 @@ module NoName
         end
       end.flatten
 
-      file_path = 'data.json'
+      file_path = 'ruby_detective.html'
       File.delete(file_path) if File.exist?(file_path)
       File.open(file_path, 'w') do |file|
         file << GraphBuilder.new(classes).build
-      end
-
-      classes.each do |c|
-        puts "---------------------------------------"
-        puts c.name.to_s + ' < ' + c.inheritance_class_name.to_s
-        puts " "
-        puts 'File path: ' + c.file_path
-        puts 'Namespace: ' + c.namespace.to_s
-        puts " "
-        puts "-[ Constants referenced ]-"
-        c.constants_referenced.each { |c| puts c }
-        puts "-[ Dependencies detected ]-"
-        c.dependencies.each { |c| puts c.full_name }
       end
     end
   end
