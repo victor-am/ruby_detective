@@ -1,4 +1,4 @@
-module NoName
+module RubyDetective
   module RichNodes
     class ClassDeclarationNode < GenericNode
       CLASS_NAME_NODE_INDEX = 0

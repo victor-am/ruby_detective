@@ -1,4 +1,4 @@
-module NoName
+module RubyDetective
   module RichNodes
     class ValueNode < GenericNode
       attr_reader :value

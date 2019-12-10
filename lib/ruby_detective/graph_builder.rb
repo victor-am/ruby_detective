@@ -1,7 +1,7 @@
 require 'json'
 require 'erb'
 
-module NoName
+module RubyDetective
   class GraphBuilder
     attr_reader :classes
 

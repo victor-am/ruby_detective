@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-
-require_relative '../lib/no_name'
-parser = NoName::Report.new(ARGV[0])
-parser.run

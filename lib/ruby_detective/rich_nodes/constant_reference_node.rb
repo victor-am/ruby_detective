@@ -1,4 +1,4 @@
-module NoName
+module RubyDetective
   module RichNodes
     class ConstantReferenceNode < GenericNode
       CONSTANT_NAME_INDEX = 1

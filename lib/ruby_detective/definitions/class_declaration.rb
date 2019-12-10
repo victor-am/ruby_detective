@@ -1,4 +1,4 @@
-module NoName
+module RubyDetective
   module Definitions
     class ClassDeclaration
       attr_reader :namespace, :file_path, :inheritance_class_name, :constants_referenced, :dependencies, :lines_of_code

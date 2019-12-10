@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    no_name (0.0.0)
+    ruby_detective (0.0.0)
       parser (~> 2.6.5)
 
 GEM
@@ -15,7 +15,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  no_name!
+  ruby_detective!
 
 BUNDLED WITH
    1.17.2

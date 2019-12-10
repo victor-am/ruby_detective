@@ -1,12 +1,12 @@
 Gem::Specification.new do |s|
-  s.name        = 'no_name'
+  s.name        = 'ruby_detective'
   s.version     = '0.0.0'
   s.date        = '2019-01-30'
   s.summary     = ""
   s.description = ""
   s.authors     = ["Victor Marques"]
   s.email       = ''
-  s.files       = ['lib/no_name.rb']
+  s.files       = ['lib/ruby_detective.rb']
   s.homepage    =
     ''
   s.license       = 'MIT'

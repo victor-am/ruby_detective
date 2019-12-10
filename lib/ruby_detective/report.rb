@@ -1,6 +1,6 @@
 require 'parser/current'
 
-module NoName
+module RubyDetective
   class Report
     attr_reader :project_path, :classes, :modules
 

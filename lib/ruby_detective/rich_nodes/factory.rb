@@ -1,4 +1,4 @@
-module NoName
+module RubyDetective
   module RichNodes
     class Factory
       attr_reader :node, :file_path, :parent_node

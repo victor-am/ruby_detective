@@ -1,4 +1,4 @@
-module NoName
+module RubyDetective
   module RichNodes
     class GenericNode
       attr_reader :ast_node, :children, :file_path, :parent_node

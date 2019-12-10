@@ -1,4 +1,4 @@
-module NoName
+module RubyDetective
   class RichNodeAnalyzer
     attr_reader :ast, :classes
 

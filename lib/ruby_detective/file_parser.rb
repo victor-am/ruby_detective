@@ -1,4 +1,4 @@
-module NoName
+module RubyDetective
   class FileParser
     attr_reader :path, :rich_ast, :analysis
 

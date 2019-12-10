@@ -1,4 +1,4 @@
-module NoName
+module RubyDetective
   module RichNodes
     class Query
       attr_reader :node
