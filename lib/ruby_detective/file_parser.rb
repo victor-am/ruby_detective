@@ -1,6 +1,6 @@
 module RubyDetective
   class FileParser
-    attr_reader :path, :rich_ast, :analysis
+    attr_reader :path, :analysis
 
     def initialize(file_path, project_path)
       @path = file_path
@@ -8,19 +8,14 @@ module RubyDetective
     end
 
     def parse
-      @code = File.read(path)
-      @raw_ast = Parser::CurrentRuby.parse(@code)
-      return false if raw_ast.nil?
-
-      @rich_ast = RichNodes::Factory.build(raw_ast, file_path: clean_path)
-      rich_ast.process_all_children!
-
-      @analysis = RichNodeAnalyzer.new(rich_ast)
-      analysis.analyze
+      code = File.read(path)
+      @analysis = AST::Analyzer.new(code, clean_path)
+      analysis.run
+      true
     end
 
     private
-    attr_reader :raw_ast, :project_path
+    attr_reader :project_path
 
     def clean_path
       path.sub(project_path, "")

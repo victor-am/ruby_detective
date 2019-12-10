@@ -1,6 +1,6 @@
 module RubyDetective
-  module RichNodes
-    class Factory
+  module AST
+    class NodeFactory
       attr_reader :node, :file_path, :parent_node
 
       def initialize(node, file_path:, parent_node: nil)
@@ -20,17 +20,17 @@ module RubyDetective
       private
 
       def node_class
-        return ValueNode if not_an_ast_node?
+        return Nodes::ValueNode if not_an_ast_node?
 
         case node.type
         when :class
-          ClassDeclarationNode
+          Nodes::ClassDeclarationNode
         when :module
-          ModuleDeclarationNode
+          Nodes::ModuleDeclarationNode
         when :const
-          ConstantReferenceNode
+          Nodes::ConstantReferenceNode
         else
-          GenericNode
+          Nodes::GenericNode
         end
       end
 

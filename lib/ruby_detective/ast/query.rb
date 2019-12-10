@@ -1,5 +1,5 @@
 module RubyDetective
-  module RichNodes
+  module AST
     class Query
       attr_reader :node
 

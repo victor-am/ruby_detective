@@ -2,16 +2,14 @@ require 'json'
 require 'erb'
 
 module RubyDetective
-  class GraphBuilder
+  class UIGenerator
     attr_reader :classes
 
     def initialize(classes)
       @classes = classes
-      @erb_template = File.read(File.join(File.dirname(__FILE__), "../../assets/template.html.erb")
-)
     end
 
-    def build
+    def generate
       classes_data_as_json = classes.map do |c|
         {
           name: c.name,
@@ -23,7 +21,13 @@ module RubyDetective
         }
       end.to_json
 
-      ERB.new(@erb_template).result(binding)
+      template_path = File.join(File.dirname(__FILE__), "../../assets/template.html.erb")
+      erb_template = File.read(template_path)
+      ui_source_code = ERB.new(erb_template).result(binding)
+
+      output_file_path = 'ruby_detective.html'
+      File.delete(output_file_path) if File.exist?(output_file_path)
+      File.open(output_file_path, 'w') { |file| file << ui_source_code }
     end
   end
 end

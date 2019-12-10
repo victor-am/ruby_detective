@@ -1,6 +1,6 @@
 module RubyDetective
-  module Definitions
-    class ClassDeclaration
+  module Representations
+    class ClassRepresentation
       attr_reader :namespace, :file_path, :inheritance_class_name, :constants_referenced, :dependencies, :lines_of_code
 
       def initialize(namespace, inheritance_class_name: nil, file_path:, constant_references:, first_line:, last_line:)
