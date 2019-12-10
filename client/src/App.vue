@@ -2,32 +2,24 @@
   <div id="app">
     <div class="toolbar">
       <el-form class="search-bar">
-        <h1 class="logo">Ruby Detective</h1>
-        <el-form-item>
-          <el-input v-model="classSearchTerm"></el-input>
-        </el-form-item>
+        <h1 class="logo"><img src="./assets/logo.png"> Ruby Detective</h1>
 
         <el-form-item>
-          <el-button type="primary" @click="showFullGraph = true; selectedClass = false">Show full project graph</el-button>
+          <el-input v-model.lazy="classSearchTerm" placeholder="Search for classes and files...">
+            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          </el-input>
         </el-form-item>
       </el-form>
 
       <ul class="class-list">
         <li class="class-item" v-for="classData in filteredClassesList" :key="classData.full_name">
-          <el-card>
-            <div slot="header" class="clearfix">
-              <span>{{ classData.full_name }}</span>
-              <el-button style="float: right; padding: 3px 0" type="text" @click="selectedClass = classData.full_name; showFullGraph = false">See graph</el-button>
-            </div>
-            <div class="extra-info">
-              <p>{{ classData.file_path }}</p>
-              <p>Lines of code: {{ classData.lines_of_code }}</p>
-            </div>
-          </el-card>
-
+          <ClassCard :classData="classData" @selectClass="selectClass"></ClassCard>
         </li>
       </ul>
     </div>
+
+    <el-button size="mini" @click="selectFullGraph" class="full-graph-button">Show full project graph</el-button>
+
     <DependencyGraph class="graph" :classesData="filteredClassesData"/>
   </div>
 </template>
@@ -36,13 +28,15 @@
 import Fuse from 'fuse.js'
 
 import DependencyGraph from './components/DependencyGraph.vue'
+import ClassCard from './components/ClassCard.vue'
 
 const CLASSES_DATA = require('./data.json')
 
 export default {
   name: 'app',
   components: {
-    DependencyGraph
+    DependencyGraph,
+    ClassCard
   },
   data() {
     return {
@@ -52,15 +46,11 @@ export default {
       showFullGraph: false
     }
   },
+
   computed: {
     fuzzySearcher() {
       const options = {
-        keys: [
-          {
-            name: 'full_name',
-            weight: 1
-          }
-        ]
+        keys: ['full_name', 'file_path']
       }
 
       return new Fuse(this.classesData, options)
@@ -71,20 +61,27 @@ export default {
     },
 
     filteredClassesData() {
+      const selectedClass = this.classesData.filter((c) => c.full_name == this.selectedClass)[0]
+
       if (this.showFullGraph == true) { return this.classesData }
+      if (selectedClass === undefined) { return [] }
 
-      const selectedClass = this.selectedClass
-
-      const classes = this.classesData.filter((c) => {
-        return c.name == selectedClass || c.dependencies.includes(selectedClass)
+      const dependentsAndDependencies = this.classesData.filter((c) => {
+        return c.dependencies.includes(selectedClass.full_name) || selectedClass.dependencies.includes(c.full_name)
       })
 
-      const classesNames = classes.map((c) => c.full_name)
+      return dependentsAndDependencies.concat(selectedClass)
+    }
+  },
 
-      const matchedClassDependencies = this.classesData.filter((c) => classesNames.includes(c.full_name))
-      const uniqueDependencies = matchedClassDependencies.filter((cd) => !classesNames.includes(cd.full_name))
-
-      return classes.concat(uniqueDependencies)
+  methods: {
+    selectClass(classData) {
+      this.selectedClass = classData.full_name
+      this.showFullGraph = false
+    },
+    selectFullGraph() {
+      this.showFullGraph = true
+      this.selectedClass = ''
     }
   }
 }
@@ -102,7 +99,6 @@ h4 { font-size: 14px; }
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   display: flex;
   height: 100vh;
@@ -111,41 +107,57 @@ h4 { font-size: 14px; }
 
 .logo {
   margin: 10px 0 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 15px;
+}
+
+.logo img {
+  margin-right: 5px;
+  width: 50px;
+  height: auto;
 }
 
 .toolbar {
   width: 25%;
   height: 100%;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
 }
 
 .toolbar .search-bar {
   width: 100%;
-  margin-bottom: 2px;
-  border: 1px solid #e8e8e8;
-  background-color: #f5f5f5;
   border-bottom-right-radius: 11px;
   padding: 0 15px 0 15px;
+  background-color: rgba(255,255,255,0.9);
+  box-shadow: #00000026 2px 2px 3px;
+  z-index: 2;
 }
 
 .toolbar .class-list {
+  padding-top: 10px;
   overflow-y: scroll;
   height: auto;
-  text-align: left;
 }
 
 .graph {
-  width: 75%;
+  width: 100%;
 }
 
 .class-item {
   margin: 0 20px 10px 15px;
 }
 
-.class-item .extra-info {
-  font-size: 14px;
-  color: #555;
+.full-graph-button {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  z-index: 1;
 }
 </style>

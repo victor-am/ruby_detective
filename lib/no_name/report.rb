@@ -14,7 +14,7 @@ module NoName
       puts "Starting!!"
 
       Dir.glob("#{project_path}/**/*.rb") do |file_path|
-        file = FileParser.new(file_path)
+        file = FileParser.new(file_path, project_path)
 
         if file.parse
           @files << file

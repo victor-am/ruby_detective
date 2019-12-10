@@ -33,9 +33,8 @@ const GRAPH_OPTIONS = {
   edges: {
     width: 0.15,
     color: { inherit: "from" },
-    smooth: {
-      type: "continuous"
-    }
+    smooth: false,
+    arrows: 'to'
   },
   interaction: {
     tooltipDelay: 200,
@@ -51,7 +50,7 @@ export default {
   },
   data() {
     return {
-      graph: {},
+      graph: { destroy: () => {} },
       nodesDataset: [],
       highlightActive: false
     }
@@ -102,6 +101,7 @@ export default {
       const data = { nodes, edges }
 
       this.nodesDataset = nodes
+      this.graph.destroy()
       this.graph = new vis.Network(container, data, GRAPH_OPTIONS);
     }
   }
@@ -112,6 +112,5 @@ export default {
 #dependency-graph {
   width: 100%;
   height: 100%;
-  outline: none !important;
 }
 </style>
