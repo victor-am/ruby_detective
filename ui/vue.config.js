@@ -17,9 +17,9 @@ module.exports = {
   configureWebpack: {
     plugins: [
       new HtmlWebpackPlugin({
-        filename: 'index.html',
         title: 'Ruby Detective',
-        template: 'public/index.html'
+        template: 'html-loader!public/index.html.erb',
+        filename: '../../views/template.html.erb'
       }),
       new InlineSourceWebpackPlugin({
         compress: true,

@@ -21,7 +21,7 @@ module RubyDetective
         }
       end.to_json
 
-      template_path = File.join(File.dirname(__FILE__), "../../assets/template.html.erb")
+      template_path = File.join(File.dirname(__FILE__), "../../views/template.html.erb")
       erb_template = File.read(template_path)
       ui_source_code = ERB.new(erb_template).result(binding)
 
