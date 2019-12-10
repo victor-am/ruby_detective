@@ -4,14 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>ruby-detective</title>
+    <title>Ruby Detective</title>
+    <link inline inline-asset="app\.\w+\.css$" inline-asset-delete>
+    <link inline inline-asset="chunk-vendors\.\w+\.css$" inline-asset-delete>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but ruby-detective doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
+    <script inline inline-asset="app\.\w+\.js$" inline-asset-delete></script>
+    <script inline inline-asset="chunk-vendors\.\w+\.js$" inline-asset-delete></script>
     <!-- built files will be auto injected -->
   </body>
 </html>

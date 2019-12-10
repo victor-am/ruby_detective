@@ -15,23 +15,20 @@
       </p>
     </div>
 
-    <el-button class="graph-button" type="text" icon="el-icon-share" @click="$emit('selectClass', classData)">
-      Show graph
+    <el-button class="graph-button" type="text" @click="$emit('selectClass', classData)">
+      <GraphIcon/> Show graph
     </el-button>
   </el-card>
 </template>
 
 <script>
+import GraphIcon from '@/assets/graph.svg';
+
 export default {
   name: 'ClassCard',
+  components: { GraphIcon },
   props: {
     classData: Object
-  },
-
-  computed: {
-  },
-
-  methods: {
   }
 }
 </script>

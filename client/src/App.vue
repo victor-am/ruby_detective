@@ -2,12 +2,10 @@
   <div id="app">
     <div class="toolbar">
       <el-form class="search-bar">
-        <h1 class="logo"><img src="./assets/logo.png"> Ruby Detective</h1>
+        <h1 class="logo"><Logo/> Ruby Detective</h1>
 
         <el-form-item>
-          <el-input v-model.lazy="classSearchTerm" placeholder="Search for classes and files...">
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
+          <el-input v-model.lazy="classSearchTerm" placeholder="Search for classes and files..."/>
         </el-form-item>
       </el-form>
 
@@ -29,6 +27,7 @@ import Fuse from 'fuse.js'
 
 import DependencyGraph from './components/DependencyGraph.vue'
 import ClassCard from './components/ClassCard.vue'
+import Logo from './assets/logo.svg';
 
 const CLASSES_DATA = require('./data.json')
 
@@ -36,7 +35,8 @@ export default {
   name: 'app',
   components: {
     DependencyGraph,
-    ClassCard
+    ClassCard,
+    Logo
   },
   data() {
     return {
@@ -110,13 +110,13 @@ h4 { font-size: 14px; }
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-right: 15px;
+  padding-right: 25px;
 }
 
-.logo img {
+.logo svg {
   margin-right: 5px;
   width: 50px;
-  height: auto;
+  height: 50px;
 }
 
 .toolbar {
