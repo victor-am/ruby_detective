@@ -20,8 +20,17 @@ module RubyDetective
       puts "Finding dependencies..."
       classes = DependencySearch.new(classes).run
 
-      puts "Generating output file..."
-      UIGenerator.new(classes).generate
+      if ENV['ENV'] == 'development'
+        puts "Generating output .json file..."
+        json = JSONBuilder.build(classes)
+
+        output_file_path = 'ui/src/data.json'
+        File.delete(output_file_path) if File.exist?(output_file_path)
+        File.open(output_file_path, 'w') { |file| file << json }
+      else
+        puts "Generating output HTML file..."
+        UIGenerator.new(classes).generate
+      end
 
       puts "Done!"
     end

@@ -6,7 +6,7 @@ require 'parser/current'
 require_relative 'ruby_detective/runner'
 require_relative 'ruby_detective/file_parser'
 require_relative 'ruby_detective/dependency_search'
-
+require_relative 'ruby_detective/json_builder'
 require_relative 'ruby_detective/ui_generator'
 
 require_relative 'ruby_detective/representations/class_representation'

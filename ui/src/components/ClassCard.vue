@@ -6,12 +6,16 @@
     </div>
     <div class="extra-info">
       <p>
-        Lines of code:
-        <strong> {{ classData.lines_of_code }}</strong>
+        Dependencies:
+        <span class="value">{{ classData.dependencies.length }}</span>
       </p>
       <p>
-        Dependencies:
-        <strong>{{ classData.dependencies.length }}</strong>
+        Dependents:
+        <span class="value">{{ classData.dependents.length }}</span>
+      </p>
+      <p>
+        Lines of code:
+        <span class="value">{{ classData.lines_of_code }}</span>
       </p>
     </div>
 
@@ -38,8 +42,18 @@ export default {
   font-size: 14px;
   color: #555;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  flex-wrap: wrap;
   margin-bottom: 15px;
+}
+.extra-info p {
+  margin: 5px;
+  text-align: center;
+}
+.extra-info .value {
+  font-weight: bold;
+  font-size: 18px;
+  display: block;
 }
 .graph-button {
   padding: 3px 0;

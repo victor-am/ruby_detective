@@ -8,6 +8,7 @@ module RubyDetective
 
     def run
       register_dependencies
+      register_dependents
       merge_duplications
 
       classes
@@ -23,6 +24,16 @@ module RubyDetective
         end.flatten.compact
 
         klass.register_dependencies(dependencies)
+      end
+    end
+
+    def register_dependents
+      classes.each do |klass|
+        dependents = classes.select do |c|
+          c.dependencies.map(&:full_name).include?(klass.full_name)
+        end
+
+        klass.register_dependents(dependents)
       end
     end
 

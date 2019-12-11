@@ -1,7 +1,7 @@
 module RubyDetective
   module Representations
     class ClassRepresentation
-      attr_reader :namespace, :file_path, :inheritance_class_name, :constants_referenced, :dependencies, :lines_of_code
+      attr_reader :namespace, :file_path, :inheritance_class_name, :constants_referenced, :dependencies, :dependents, :lines_of_code
 
       def initialize(namespace, inheritance_class_name: nil, file_path:, constant_references:, first_line:, last_line:)
         @file_path = file_path
@@ -9,6 +9,7 @@ module RubyDetective
         @inheritance_class_name = inheritance_class_name
         @constants_referenced = constant_references
         @dependencies = []
+        @dependents = []
         @first_line = first_line
         @last_line = last_line
         @lines_of_code = last_line - first_line + 1
@@ -24,6 +25,10 @@ module RubyDetective
 
       def register_dependencies(dependencies)
         @dependencies += dependencies
+      end
+
+      def register_dependents(dependents)
+        @dependents += dependents
       end
 
       def merge_information(duplicates)
