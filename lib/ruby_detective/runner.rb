@@ -1,4 +1,4 @@
-require 'parser/current'
+require "parser/current"
 
 module RubyDetective
   class Report
@@ -20,13 +20,13 @@ module RubyDetective
       puts "Finding dependencies..."
       classes = DependencySearch.new(classes).run
 
-      if ENV['ENV'] == 'development'
+      if ENV["ENV"] == "development"
         puts "Generating output .json file..."
         json = JSONBuilder.build(classes)
 
-        output_file_path = 'ui/src/data.json'
+        output_file_path = "ui/src/data.json"
         File.delete(output_file_path) if File.exist?(output_file_path)
-        File.open(output_file_path, 'w') { |file| file << json }
+        File.open(output_file_path, "w") { |file| file << json }
       else
         puts "Generating output HTML file..."
         UIGenerator.new(classes).generate

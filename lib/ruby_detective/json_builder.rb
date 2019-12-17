@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 module RubyDetective
   class JSONBuilder
@@ -17,7 +17,7 @@ module RubyDetective
         {
           name: c.name,
           full_name: c.full_name,
-          namespace: c.namespace[0..-2].join('::'),
+          namespace: c.namespace[0..-2].join("::"),
           lines_of_code: c.lines_of_code,
           dependencies: c.dependencies.map(&:full_name),
           dependents: c.dependents.map(&:full_name),

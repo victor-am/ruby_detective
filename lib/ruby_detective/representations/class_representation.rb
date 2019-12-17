@@ -20,7 +20,7 @@ module RubyDetective
       end
 
       def full_name
-        namespace.join('::')
+        namespace.join("::")
       end
 
       def register_dependencies(dependencies)

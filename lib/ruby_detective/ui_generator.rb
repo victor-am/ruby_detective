@@ -1,5 +1,4 @@
-require 'json'
-require 'erb'
+require "erb"
 
 module RubyDetective
   class UIGenerator
