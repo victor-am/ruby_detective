@@ -1,15 +1,24 @@
 <template>
   <div id="app">
     <div class="toolbar">
-      <el-form class="search-bar">
+      <el-form class="search-bar" @submit.native.prevent="classSearchTerm = visualClassSearchTerm">
         <h1 class="logo"><Logo/> Ruby Detective</h1>
 
         <el-form-item>
-          <el-input v-model.lazy="classSearchTerm" placeholder="Search for classes and files..."/>
+          <el-input :value="visualClassSearchTerm" @input="visualClassSearchTerm = $event" placeholder="Search for classes and files..."/>
+          <p class="sort-by-label">Sort by</p>
+          <el-radio-group class="sort-radio" v-model="sortCriteria" size="mini">
+            <el-radio-button label="dependents">Dependents</el-radio-button>
+            <el-radio-button label="linesOfCode">LoC</el-radio-button>
+            <el-radio-button label="dependencies">Dependencies</el-radio-button>
+          </el-radio-group>
         </el-form-item>
       </el-form>
 
-      <ul class="class-list">
+      <ul class="class-list" ref="classList">
+        <li class="results-stats">
+          {{ filteredClassesList.length }} results found
+        </li>
         <li class="class-item" v-for="classData in filteredClassesList" :key="classData.full_name">
           <ClassCard :classData="classData" @selectClass="selectClass"></ClassCard>
         </li>
@@ -18,7 +27,7 @@
 
     <el-button size="mini" @click="selectFullGraph" class="full-graph-button">Show full project graph</el-button>
 
-    <DependencyGraph class="graph" :classesData="filteredClassesData"/>
+    <DependencyGraph class="graph" :classesData="classesFilteredBySelection"/>
   </div>
 </template>
 
@@ -47,25 +56,39 @@ export default {
     return {
       classesData: CLASSES_DATA,
       classSearchTerm: '',
+      visualClassSearchTerm: '',
       selectedClass: '',
-      showFullGraph: false
+      showFullGraph: false,
+      sortCriteria: 'linesOfCode'
+    }
+  },
+
+  watch: {
+    filteredClassesList() {
+      this.$nextTick(() => {
+        this.$refs.classList.scrollTop = 0;
+      });
     }
   },
 
   computed: {
     fuzzySearcher() {
       const options = {
+        threshold: 0.1,
         keys: ['full_name', 'file_path']
       }
-
       return new Fuse(this.classesData, options)
     },
 
     filteredClassesList() {
-      return this.classSearchTerm == '' ? this.classesData : this.fuzzySearcher.search(this.classSearchTerm)
+      if (this.classSearchTerm == '') {
+        return this.sortClasses(this.classesData)
+      } else {
+        return this.sortClasses(this.fuzzySearcher.search(this.classSearchTerm))
+      }
     },
 
-    filteredClassesData() {
+    classesFilteredBySelection() {
       const selectedClass = this.classesData.filter((c) => c.full_name == this.selectedClass)[0]
 
       if (this.showFullGraph == true) { return this.classesData }
@@ -87,6 +110,19 @@ export default {
     selectFullGraph() {
       this.showFullGraph = true
       this.selectedClass = ''
+    },
+    sortClasses(collection) {
+      return collection.slice().sort(this.classSortFunction)
+    },
+    classSortFunction(a, b) {
+      const criteria = this.sortCriteria
+      if (criteria == 'dependents') {
+        return b.dependents.length - a.dependents.length
+      } else if (criteria == 'dependencies') {
+        return b.dependencies.length - a.dependencies.length
+      } else if (criteria == 'linesOfCode') {
+        return b.lines_of_code - a.lines_of_code
+      }
     }
   }
 }
@@ -164,5 +200,23 @@ h4 { font-size: 14px; }
   right: 15px;
   top: 10px;
   z-index: 1;
+}
+
+.results-stats {
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.sort-radio {
+  width: 100%;
+  display: flex !important;
+  justify-content: center;
+}
+
+.sort-by-label {
+  text-align: center;
+  font-weight: bold;
+  line-height: 23px;
 }
 </style>
