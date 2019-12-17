@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
 require_relative '../lib/ruby_detective'
-parser = RubyDetective::Report.new(ARGV[0])
+parser = RubyDetective::Runner.new(ARGV[0])
 parser.run

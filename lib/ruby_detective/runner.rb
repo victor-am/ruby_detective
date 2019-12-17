@@ -1,7 +1,7 @@
 require "parser/current"
 
 module RubyDetective
-  class Report
+  class Runner
     attr_reader :project_path, :classes, :modules
 
     def initialize(project_path)
