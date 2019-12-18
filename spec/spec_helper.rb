@@ -1,3 +1,8 @@
+require "simplecov"
+SimpleCov.start do
+  add_filter "/spec/"
+end
+
 require "./lib/ruby_detective"
 
 def load_code_as_raw_ast_node(file_name)

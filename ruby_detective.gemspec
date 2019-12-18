@@ -16,4 +16,5 @@ Gem::Specification.new do |s|
   s.add_dependency "parser", "~> 2.6.5"
   s.add_development_dependency "rake", "~> 13.0.1"
   s.add_development_dependency "rspec", "~> 3.9.0"
+  s.add_development_dependency "simplecov", "~> 0.17.1"
 end
