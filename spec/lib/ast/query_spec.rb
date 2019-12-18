@@ -11,7 +11,7 @@ RSpec.describe RubyDetective::AST::Query do
       expect(results.map(&:constant_name)).to eq([:SimpleClass, :SOME_CONSTANT, :OtherClass])
     end
 
-    it "returns only matched constants when filtered by where" do
+    it "returns only matched constants when filtered by namespace" do
       node = load_code_as_rich_ast_node(:nested_class)
       subject = RubyDetective::AST::Query.new(node)
 
