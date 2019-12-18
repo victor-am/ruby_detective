@@ -16,7 +16,7 @@ module RubyDetective
         end
 
         def declared_namespace
-          nil
+          []
         end
 
         def class_declaration_node?
@@ -35,16 +35,26 @@ module RubyDetective
           type == :value
         end
 
+        def generic_node?
+          type == :generic
+        end
+
         def type
-          ast_node.type
+          :generic
         end
 
         def first_line
-          ast_node.loc.line
+          # When the node represents something that is not directly in the code
+          # the `ast_node.loc.expression` can be nil, and since `.line` is just
+          # sugar syntax for `loc.expression.line` it would throw an error.
+          ast_node.loc.line rescue nil
         end
 
         def last_line
-          ast_node.loc.last_line
+          # When the node represents something that is not directly in the code
+          # the `ast_node.loc.expression` can be nil, and since `.last_line` is just
+          # sugar syntax for `loc.expression.last_line` it would throw an error.
+          ast_node.loc.last_line rescue nil
         end
 
         def query

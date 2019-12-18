@@ -11,7 +11,7 @@ class SimpleClass
   class NestedClass
     NESTED_CONSTANT = 'Bar'
 
-    def self.return_constant
+    def self.some_method
       NESTED_CONSTANT
     end
   end

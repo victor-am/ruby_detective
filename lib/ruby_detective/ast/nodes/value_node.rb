@@ -13,6 +13,14 @@ module RubyDetective
           :value
         end
 
+        def first_line
+          parent_node.first_line
+        end
+
+        def last_line
+          parent_node.last_line
+        end
+
         private
 
         def raw_children

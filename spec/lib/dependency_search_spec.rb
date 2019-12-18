@@ -21,7 +21,7 @@ RSpec.describe RubyDetective::DependencySearch do
   end
 
   it "registers the correct dependencies on the class representations" do
-    subject = RubyDetective::DependencySearch.new(classes)
+    subject = described_class.new(classes)
 
     subject.run
 
@@ -30,7 +30,7 @@ RSpec.describe RubyDetective::DependencySearch do
   end
 
   it "registers the correct dependents on the class representations" do
-    subject = RubyDetective::DependencySearch.new(classes)
+    subject = described_class.new(classes)
 
     subject.run
 

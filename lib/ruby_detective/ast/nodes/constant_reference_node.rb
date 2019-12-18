@@ -6,6 +6,10 @@ module RubyDetective
         def constant_name
           children[CONSTANT_NAME_INDEX].value
         end
+
+        def type
+          :const
+        end
       end
     end
   end

@@ -7,24 +7,39 @@ module RubyDetective
         @node = node
       end
 
-      def constant_references(where: {})
-        constants = deep_search(:constant_reference_node?, node)
-        return constants unless where[:namespace]
+      def all(where: {})
+        constants = deep_search(node)
 
-        constants.select { |c| c.namespace.include?(where[:namespace].to_sym) }
+        case where
+        when -> (w) { w.key?(:type) }
+          constants.select { |c| c.type == where[:type] }
+        else
+          constants
+        end
+      end
+
+      def constant_references(where: {})
+        constants = deep_search(node, :constant_reference_node?)
+
+        case where
+        when -> (w) { w.key?(:namespace) }
+          constants.select { |c| c.namespace.include?(where[:namespace].to_sym) }
+        else
+          constants
+        end
       end
 
       def class_declarations
-        deep_search(:class_declaration_node?, node)
+        deep_search(node, :class_declaration_node?)
       end
 
       private
 
-      def deep_search(validation_method, node, acc = [])
+      def deep_search(node, validation_method = nil, acc: [])
         return if node.value_node?
 
-        acc << node if node.public_send(validation_method)
-        node.children.each { |child| send(__method__, validation_method, child, acc) }
+        acc << node if !validation_method || node.public_send(validation_method)
+        node.children.each { |child| send(__method__, child, validation_method, acc: acc) }
 
         acc.uniq
       end

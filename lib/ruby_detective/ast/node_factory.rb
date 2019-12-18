@@ -3,6 +3,16 @@ module RubyDetective
     class NodeFactory
       attr_reader :node, :file_path, :parent_node
 
+      # A dictionary that converts the Parser gem type to our Rich AST type
+      NODE_TYPE_DICTIONARY = {
+        const: :const,
+        class: :class,
+        module: :module
+      }
+      # The following types also exist:
+      # value - the last node of a branch, can be nil, a string, a symbol, etc...
+      # generic - a broader "others" type, for nodes not mapped out
+
       def initialize(node, file_path:, parent_node: nil)
         @node = node
         @file_path = file_path
@@ -20,17 +30,27 @@ module RubyDetective
       private
 
       def node_class
-        return Nodes::ValueNode if not_an_ast_node?
-
-        case node.type
+        case node_type
         when :class
           Nodes::ClassDeclarationNode
         when :module
           Nodes::ModuleDeclarationNode
         when :const
           Nodes::ConstantReferenceNode
-        else
+        when :value
+          Nodes::ValueNode
+        when :generic
           Nodes::GenericNode
+        end
+      end
+
+      def node_type
+        if not_an_ast_node?
+          :value
+        elsif NODE_TYPE_DICTIONARY.key?(node.type)
+          NODE_TYPE_DICTIONARY[node.type]
+        else
+          :generic
         end
       end
 

@@ -4,7 +4,7 @@ RSpec.describe RubyDetective::AST::Query do
   describe "#constant_references" do
     it "returns all the constants referenced in the node" do
       node = load_code_as_rich_ast_node(:simple_class)
-      subject = RubyDetective::AST::Query.new(node)
+      subject = described_class.new(node)
 
       results = subject.constant_references
 
@@ -13,7 +13,7 @@ RSpec.describe RubyDetective::AST::Query do
 
     it "returns only matched constants when filtered by namespace" do
       node = load_code_as_rich_ast_node(:nested_class)
-      subject = RubyDetective::AST::Query.new(node)
+      subject = described_class.new(node)
 
       results = subject.constant_references(where: { namespace: :NestedClass })
 
@@ -24,7 +24,7 @@ RSpec.describe RubyDetective::AST::Query do
   describe "#class_declarations" do
     it "returns all the classes declared in the node" do
       node = load_code_as_rich_ast_node(:nested_class)
-      subject = RubyDetective::AST::Query.new(node)
+      subject = described_class.new(node)
 
       results = subject.class_declarations
 

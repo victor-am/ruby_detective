@@ -29,6 +29,10 @@ module RubyDetective
           inline_namespace(prepended_namespace) + [class_name]
         end
 
+        def type
+          :class
+        end
+
         private
 
         def inline_namespace(node, accumulator = [])

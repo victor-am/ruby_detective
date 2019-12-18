@@ -9,7 +9,11 @@ module RubyDetective
 
         # TODO: Add support for inline namespacing
         def declared_namespace
-          module_name
+          [module_name]
+        end
+
+        def type
+          :module
         end
       end
     end
