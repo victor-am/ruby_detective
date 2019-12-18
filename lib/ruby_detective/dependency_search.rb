@@ -37,6 +37,7 @@ module RubyDetective
       end
     end
 
+    # TODO: move this to another place
     def merge_duplications
       @classes = classes.group_by(&:full_name).map do |_full_name, group|
         if group.size == 1
