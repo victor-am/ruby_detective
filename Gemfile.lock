@@ -7,27 +7,31 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    ansi (1.5.0)
     ast (2.4.0)
-    builder (3.2.4)
-    minitest (5.13.0)
-    minitest-reporters (1.4.2)
-      ansi
-      builder
-      minitest (>= 5.0)
-      ruby-progressbar
+    diff-lcs (1.3)
     parser (2.6.5.0)
       ast (~> 2.4.0)
     rake (13.0.1)
-    ruby-progressbar (1.10.1)
+    rspec (3.9.0)
+      rspec-core (~> 3.9.0)
+      rspec-expectations (~> 3.9.0)
+      rspec-mocks (~> 3.9.0)
+    rspec-core (3.9.0)
+      rspec-support (~> 3.9.0)
+    rspec-expectations (3.9.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.9.0)
+    rspec-mocks (3.9.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.9.0)
+    rspec-support (3.9.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  minitest (~> 5.13.0)
-  minitest-reporters (~> 1.4.2)
   rake (~> 13.0.1)
+  rspec (~> 3.9.0)
   ruby_detective!
 
 BUNDLED WITH

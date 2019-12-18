@@ -11,7 +11,7 @@ module RubyDetective
         constants = deep_search(:constant_reference_node?, node)
         return constants unless where[:namespace]
 
-        constants.select { |c| c.namespace.include?(where[:namespace]) }
+        constants.select { |c| c.namespace.include?(where[:namespace].to_sym) }
       end
 
       def class_declarations
