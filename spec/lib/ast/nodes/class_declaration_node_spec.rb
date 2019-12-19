@@ -7,8 +7,20 @@ deep_node = root_node.query.all(where: { type: :class }).last
 RSpec.describe RubyDetective::AST::Nodes::ClassDeclarationNode do
   it_behaves_like "AST node", deep_node
 
+  describe "#class_name" do
+    it "returns the name of the class declared by the node" do
+      expect(deep_node.class_name).to eq(:NestedClass)
+    end
+  end
+
+  describe "#inheritance_class_name" do
+    it "returns nil if no class" do
+      expect(deep_node.inheritance_class_name).to eq(nil)
+    end
+  end
+
   describe "#declared_namespace" do
-    it "returns nil" do
+    it "returns the namespace declared by the node" do
       expect(deep_node.declared_namespace).to eq([:NestedClass])
     end
   end
