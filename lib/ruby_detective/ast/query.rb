@@ -18,6 +18,7 @@ module RubyDetective
         end
       end
 
+      # TODO: ignore constant definitions, only return constant references
       def constant_references(where: {})
         constants = deep_search(node, :constant_reference_node?)
 

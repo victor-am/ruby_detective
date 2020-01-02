@@ -7,7 +7,7 @@ module RubyDetective
           children[MODULE_NAME_NODE_INDEX].constant_name
         end
 
-        # TODO: Add support for inline namespacing
+        # TODO: Add support for inline namespacing (ex class Foo::Bar)
         def declared_namespace
           [module_name]
         end

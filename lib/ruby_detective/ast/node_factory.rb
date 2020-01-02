@@ -12,7 +12,7 @@ module RubyDetective
       # The following types also exist:
       #
       # value - the last node of a branch, can be nil, a string, a symbol, etc...
-      # generic - a broader "others" type, for nodes not mapped out
+      # generic - a broader "others" type, for any nodes not mapped out
 
       def initialize(node, file_path:, parent_node: nil)
         @node = node

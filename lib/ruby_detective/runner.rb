@@ -9,22 +9,19 @@ module RubyDetective
     end
 
     def run
-      data_store = DataStore.new
+      data_store = SourceRepresentation::DataStore.new
 
       puts "Processing files..."
-
-      classes = []
       Dir.glob("#{project_path}/**/*.rb") do |file_path|
-        file = FileParser.new(file_path, project_path)
-        data_store.add_classes(file.analysis.classes) if file.parse
+        FileParser.new(file_path, project_path, data_store: data_store).parse
       end
 
       puts "Finding dependencies..."
-      DependencyResolver.new(data_store).run
+      SourceRepresentation::DependencyResolver.resolve_and_populate_store(data_store)
 
       if ENV["ENV"] == "development"
         puts "Generating output .json file..."
-        json = JSONBuilder.build(classes)
+        json = JSONBuilder.build(data_store)
 
         output_file_path = "ui/src/data.json"
         File.delete(output_file_path) if File.exist?(output_file_path)

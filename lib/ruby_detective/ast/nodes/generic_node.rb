@@ -11,6 +11,10 @@ module RubyDetective
           @parent_node = parent_node
         end
 
+        def short_namespace
+          namespace[0..-2]
+        end
+
         def namespace
           build_namespace(self)
         end
@@ -61,7 +65,7 @@ module RubyDetective
           AST::Query.new(self)
         end
 
-        # Move this outside
+        # TODO: Move this outside
         # Should keep inside the nodes code only stuff that works with a fully
         # built rich AST
         def process_all_children!
