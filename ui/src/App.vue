@@ -27,7 +27,7 @@
 
     <el-button size="mini" @click="selectFullGraph" class="full-graph-button">Show full project graph</el-button>
 
-    <DependencyGraph class="graph" :classesData="classesFilteredBySelection"/>
+    <DependencyGraph class="graph" :classesData="classesFilteredBySelection" :selectedClass="selectedClass"/>
   </div>
 </template>
 
@@ -162,6 +162,7 @@ h4 { font-size: 14px; }
 
 .toolbar {
   width: 25%;
+  min-width: 310px;
   height: 100%;
   display: flex;
   flex-direction: column;

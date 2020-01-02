@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="graph-toolbar">
+      <el-button size="mini" @click="onlyDirectEdges = !onlyDirectEdges">Toggle secundary dependencies</el-button>
+    </div>
+
     <div id="dependency-graph"></div>
   </div>
 </template>
@@ -46,13 +50,15 @@ const GRAPH_OPTIONS = {
 export default {
   name: 'DependencyGraph',
   props: {
-    classesData: Array
+    classesData: Array,
+    selectedClass: String
   },
   data() {
     return {
       graph: { destroy: () => {} },
       nodesDataset: [],
-      highlightActive: false
+      highlightActive: false,
+      onlyDirectEdges: false
     }
   },
 
@@ -61,7 +67,7 @@ export default {
   },
 
   watch: {
-    classesData() {
+    dependencyGraphData() {
       this.buildGraph()
     }
   },
@@ -81,9 +87,13 @@ export default {
 
       const edges = this.classesData.map((klass) => {
         return klass.dependencies.map((dependency) => {
-          return { from: klass.full_name, to: dependency }
+          if (this.onlyDirectEdges && (dependency != this.selectedClass && klass.full_name != this.selectedClass)) {
+            return null
+          } else {
+            return { from: klass.full_name, to: dependency }
+          }
         })
-      }).flat()
+      }).flat().filter(n => n)
 
       return { nodes, edges }
     },
@@ -112,5 +122,17 @@ export default {
 #dependency-graph {
   width: 100%;
   height: 100%;
+}
+
+.graph-toolbar {
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  right: 15px;
+  z-index: 3;
+}
+
+.graph-toolbar .el-button {
+  float: right;
 }
 </style>
