@@ -4,8 +4,8 @@ module RubyDetective
   class UIGenerator
     attr_reader :classes
 
-    def initialize(classes)
-      @classes = classes
+    def initialize(data_store)
+      @classes = data_store.classes
     end
 
     def generate

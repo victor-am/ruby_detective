@@ -10,6 +10,7 @@ module RubyDetective
         module: :module
       }
       # The following types also exist:
+      #
       # value - the last node of a branch, can be nil, a string, a symbol, etc...
       # generic - a broader "others" type, for nodes not mapped out
 

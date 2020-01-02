@@ -30,10 +30,7 @@ module RubyDetective
       end
 
       def build_class_definition_object(class_node)
-        constants = rich_ast.query
-          .constant_references(where: { namespace: class_node.class_name })
-          .map(&:constant_name)
-          .uniq
+        constants = build_constant_references(class_node)
 
         Representations::ClassRepresentation.new(
           class_node.namespace,
@@ -43,6 +40,19 @@ module RubyDetective
           first_line: class_node.first_line,
           last_line: class_node.last_line
         )
+      end
+
+      def build_constant_references(class_node)
+        constant_nodes = rich_ast.query
+          .constant_references(where: { namespace: class_node.class_name })
+          .uniq{ |cr| cr.full_constant_reference_name }
+
+        constant_nodes.map do |node|
+          Representations::ConstantReferenceRepresentation.new(
+            node.namespace + [node.constant_name],
+            file_path: node.file_path
+          )
+        end
       end
     end
   end
