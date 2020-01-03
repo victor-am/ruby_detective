@@ -10,6 +10,9 @@
 
 <script>
 import vis from 'vis-network'
+import differenceWith from 'lodash/differenceWith'
+
+let graph
 
 const GRAPH_OPTIONS = {
   physics: {
@@ -41,7 +44,6 @@ const GRAPH_OPTIONS = {
     arrows: 'to'
   },
   interaction: {
-    tooltipDelay: 200,
     hideEdgesOnDrag: true,
     hideEdgesOnZoom: true
   }
@@ -56,9 +58,9 @@ export default {
   data() {
     return {
       graph: null,
-      nodesDataset: [],
-      highlightActive: false,
-      showSecundaryDependencies: true
+      showSecundaryDependencies: true,
+      nodesDataset: null,
+      edgesDataset: null
     }
   },
 
@@ -68,7 +70,11 @@ export default {
 
   watch: {
     dependencyGraphData() {
-      this.buildGraph()
+      if (graph) {
+        this.updateGraph()
+      } else {
+        this.buildGraph()
+      }
     }
   },
 
@@ -100,16 +106,31 @@ export default {
 
   methods: {
     buildGraph() {
-      const nodes = new vis.DataSet(this.dependencyGraphData.nodes);
-      const edges = new vis.DataSet(this.dependencyGraphData.edges);
       const container = document.getElementById("dependency-graph");
-      const data = { nodes, edges }
+      this.nodesDataset = new vis.DataSet(this.dependencyGraphData.nodes);
+      this.edgesDataset = new vis.DataSet(this.dependencyGraphData.edges);
+      const data = { nodes: this.nodesDataset, edges: this.edgesDataset }
 
-      this.nodesDataset = nodes
+      graph = new vis.Network(container, data, GRAPH_OPTIONS);
+      graph.moveTo({ scale: 0.5, offset: { x: 200, y: 0 }})
+    },
 
-      if (this.graph) { this.graph.destroy() }
-      this.graph = new vis.Network(container, data, GRAPH_OPTIONS);
-      this.graph.moveTo({ scale: 0.5, offset: { x: 200, y: 0 }})
+    updateGraph() {
+      const isSameId = (a, b) => a.id === b.id
+
+      const currentlyDrawnNodes = this.nodesDataset.get()
+      const nodes = this.dependencyGraphData.nodes
+      const extraNodes = differenceWith(currentlyDrawnNodes, nodes, isSameId)
+      const missingNodes = differenceWith(nodes, currentlyDrawnNodes, isSameId)
+      this.nodesDataset.add(missingNodes)
+      this.nodesDataset.remove(extraNodes)
+
+      const currentlyDrawnEdges = this.edgesDataset.get()
+      const edges = this.dependencyGraphData.edges
+      const extraEdges = differenceWith(currentlyDrawnEdges, edges, isSameId)
+      const missingEdges = differenceWith(edges, currentlyDrawnEdges, isSameId)
+      this.edgesDataset.add(missingEdges)
+      this.edgesDataset.remove(extraEdges)
     },
 
     isSecundaryDependency(dependent_name, dependency_name) {
@@ -124,14 +145,15 @@ export default {
 #dependency-graph {
   width: 100%;
   height: 100%;
+  z-index: -1;
 }
 
 .graph-toolbar {
   position: absolute;
   top: 80px;
-  width: 100%;
+  width: 300px;
   right: 15px;
-  z-index: 3;
+  z-index: 1;
 }
 
 .graph-toolbar .el-checkbox {

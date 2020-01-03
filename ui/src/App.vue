@@ -215,7 +215,7 @@ h4 { font-size: 14px; }
   position: absolute;
   right: 15px;
   top: 45px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .results-stats {
