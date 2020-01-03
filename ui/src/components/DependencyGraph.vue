@@ -12,6 +12,8 @@
 import vis from 'vis-network'
 import differenceWith from 'lodash/differenceWith'
 
+let graph
+
 const GRAPH_OPTIONS = {
   physics: {
     solver: "barnesHut",
@@ -30,12 +32,6 @@ const GRAPH_OPTIONS = {
         maxVisible: 0
       }
     },
-    label: {
-      min: 30,
-      max: 30,
-      drawThreshold: 0,
-      maxVisible: 0
-    },
     font: {
       size: 12,
       face: "Tahoma"
@@ -48,7 +44,6 @@ const GRAPH_OPTIONS = {
     arrows: 'to'
   },
   interaction: {
-    tooltipDelay: 200,
     hideEdgesOnDrag: true,
     hideEdgesOnZoom: true
   }
@@ -75,7 +70,7 @@ export default {
 
   watch: {
     dependencyGraphData() {
-      if (this.graph) {
+      if (graph) {
         this.updateGraph()
       } else {
         this.buildGraph()
@@ -116,8 +111,8 @@ export default {
       this.edgesDataset = new vis.DataSet(this.dependencyGraphData.edges);
       const data = { nodes: this.nodesDataset, edges: this.edgesDataset }
 
-      this.graph = new vis.Network(container, data, GRAPH_OPTIONS);
-      this.graph.moveTo({ scale: 0.5, offset: { x: 200, y: 0 }})
+      graph = new vis.Network(container, data, GRAPH_OPTIONS);
+      graph.moveTo({ scale: 0.5, offset: { x: 200, y: 0 }})
     },
 
     updateGraph() {
@@ -150,14 +145,15 @@ export default {
 #dependency-graph {
   width: 100%;
   height: 100%;
+  z-index: -1;
 }
 
 .graph-toolbar {
   position: absolute;
   top: 80px;
-  width: 100%;
+  width: 300px;
   right: 15px;
-  z-index: 3;
+  z-index: 1;
 }
 
 .graph-toolbar .el-checkbox {
