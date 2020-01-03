@@ -7,6 +7,13 @@ module RubyDetective
           children[CONSTANT_NAME_INDEX].value
         end
 
+        # A top level constant is for example the "Bar" from "Foo::Bar".
+        # We access it by checking if the parent is another constant, if it is
+        # it means the constant is a nested one and not top level.
+        def top_level_constant?
+          !parent_node.constant_reference_node?
+        end
+
         # Recursively builds the constant path by traversing it's children,
         # that way we can compose a path composed of multiple namespaces,
         # for example: Foo::Bar::Batz as [:Foo, :Bar, :Batz].

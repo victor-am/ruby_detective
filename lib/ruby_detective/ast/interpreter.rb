@@ -42,9 +42,9 @@ module RubyDetective
 
       def register_constants_referenced_in_class(class_representation)
         constant_nodes = rich_ast.query
-          .constant_references(where: { namespace: class_representation.name })
+          .top_level_constant_references(where: { namespace: class_representation.name })
           .uniq{ |cr| cr.constant_path } # Removes duplicated constants
-          
+
         constant_nodes.each do |constant_node|
           data_store.register_constant(
             constant_node.constant_name,
