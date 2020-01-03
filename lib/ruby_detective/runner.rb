@@ -13,7 +13,7 @@ module RubyDetective
 
       puts "Processing files..."
       Dir.glob("#{project_path}/**/*.rb") do |file_path|
-        FileParser.new(file_path, project_path, data_store: data_store).parse
+        AST::FileParser.new(file_path, project_path, data_store: data_store).parse
       end
 
       puts "Finding dependencies..."
