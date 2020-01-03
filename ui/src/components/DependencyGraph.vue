@@ -51,7 +51,7 @@ export default {
   name: 'DependencyGraph',
   props: {
     classesData: Array,
-    selectedClass: String
+    selectedClasses: Array
   },
   data() {
     return {
@@ -75,7 +75,6 @@ export default {
   computed: {
     dependencyGraphData() {
       const nodes = this.classesData.map((klass) => {
-
         return {
           id: klass.full_name,
           label: klass.full_name,
@@ -85,21 +84,17 @@ export default {
         }
       })
 
-      const edges = this.classesData.map((klass) => {
-        return klass.dependencies.map((dependency) => {
-          if (!this.showSecundaryDependencies && this.isSecundaryDependency(klass, dependency)) {
+      const edges = this.classesData.map((dependent) => {
+        return dependent.dependencies.map((dependency_name) => {
+          if (!this.showSecundaryDependencies && this.isSecundaryDependency(dependent.full_name, dependency_name)) {
             return null
           } else {
-            return { from: klass.full_name, to: dependency }
+            return { from: dependent.full_name, to: dependency_name }
           }
         })
       }).flat().filter(n => n)
 
       return { nodes, edges }
-    },
-
-    allNodes() {
-      return this.nodesDataset.get({ returnType: "Object" })
     }
   },
 
@@ -117,8 +112,9 @@ export default {
       this.graph.moveTo({ scale: 0.5, offset: { x: 200, y: 0 }})
     },
 
-    isSecundaryDependency(klass, dependency) {
-      return dependency != this.selectedClass && klass.full_name != this.selectedClass
+    isSecundaryDependency(dependent_name, dependency_name) {
+      const selectedClasses = this.selectedClasses.map((c) => c.full_name)
+      return !selectedClasses.includes(dependency_name) && !selectedClasses.includes(dependent_name)
     }
   }
 }
@@ -132,7 +128,7 @@ export default {
 
 .graph-toolbar {
   position: absolute;
-  top: 50px;
+  top: 80px;
   width: 100%;
   right: 15px;
   z-index: 3;

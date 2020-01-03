@@ -12,7 +12,8 @@
     "element-ui": "^2.4.5",
     "fuse.js": "^3.4.6",
     "vis-network": "^6.4.6",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "lodash": "4.17.15"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",

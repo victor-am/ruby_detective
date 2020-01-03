@@ -5,7 +5,7 @@
         <h1 class="logo"><Logo/> Ruby Detective</h1>
 
         <el-form-item>
-          <el-input :value="visualClassSearchTerm" @input="visualClassSearchTerm = $event" placeholder="Search for classes and files..."/>
+          <el-input v-model="visualClassSearchTerm" placeholder="Search for classes and files..."/>
           <p class="sort-by-label">Sort by</p>
           <el-radio-group class="sort-radio" v-model="sortCriteria" size="mini">
             <el-radio-button label="dependents">Dependents</el-radio-button>
@@ -17,17 +17,17 @@
 
       <ul class="class-list" ref="classList">
         <li class="results-stats">
-          {{ filteredClassesList.length }} results found
+          {{ filteredClasses.length }} results found
         </li>
-        <li class="class-item" v-for="classData in filteredClassesList" :key="classData.full_name">
-          <ClassCard :classData="classData" @selectClass="selectClass"></ClassCard>
+        <li class="class-item" v-for="classData in filteredClasses" :key="classData.full_name">
+          <ClassCard :classData="classData" @clickMoreDetails="true" @clickToggleGraph="toggleClassFromGraph" :isSelected="isSelected(classData)"></ClassCard>
         </li>
       </ul>
     </div>
 
+    <el-button size="mini" @click="clearGraph" class="clear-graph-button">Clear {{ graphSelectedClasses.length }} items selected</el-button>
     <el-button size="mini" @click="selectFullGraph" class="full-graph-button">Show full project graph</el-button>
-
-    <DependencyGraph class="graph" :classesData="classesFilteredBySelection" :selectedClass="selectedClass"/>
+    <DependencyGraph class="graph" :classesData="classesFilteredBySelection" :selectedClasses="graphSelectedClasses"/>
   </div>
 </template>
 
@@ -38,12 +38,7 @@ import DependencyGraph from './components/DependencyGraph.vue'
 import ClassCard from './components/ClassCard.vue'
 import Logo from './assets/logo.svg';
 
-let CLASSES_DATA
-if (process.env.NODE_ENV == 'production') {
-  CLASSES_DATA = JSON.parse(document.getElementById("classes-data").innerHTML)
-} else {
-  CLASSES_DATA = require('./data.json')
-}
+import uniq from 'lodash/uniq'
 
 export default {
   name: 'app',
@@ -54,62 +49,65 @@ export default {
   },
   data() {
     return {
-      classesData: CLASSES_DATA,
+      classesData: window.CLASSES_DATA,
       classSearchTerm: '',
       visualClassSearchTerm: '',
-      selectedClass: '',
+      graphSelectedClasses: [],
       showFullGraph: false,
       sortCriteria: 'linesOfCode'
     }
   },
 
   watch: {
-    filteredClassesList() {
-      this.$nextTick(() => {
-        this.$refs.classList.scrollTop = 0;
-      });
+    filteredClasses() {
+      this.$nextTick(() => { this.$refs.classList.scrollTop = 0 });
     }
   },
 
   computed: {
     fuzzySearcher() {
-      const options = {
-        threshold: 0.1,
-        keys: ['full_name', 'file_path']
-      }
+      const options = { threshold: 0.1, keys: ['full_name', 'file_path'] }
       return new Fuse(this.classesData, options)
     },
 
-    filteredClassesList() {
+    filteredClasses() {
       if (this.classSearchTerm == '') {
         return this.sortClasses(this.classesData)
       } else {
-        return this.sortClasses(this.fuzzySearcher.search(this.classSearchTerm))
+        const searchResult = this.fuzzySearcher.search(this.classSearchTerm)
+        return this.sortClasses(searchResult)
       }
     },
 
     classesFilteredBySelection() {
-      const selectedClass = this.classesData.filter((c) => c.full_name == this.selectedClass)[0]
-
       if (this.showFullGraph == true) { return this.classesData }
-      if (selectedClass === undefined) { return [] }
 
-      const dependentsAndDependencies = this.classesData.filter((c) => {
-        return c.dependencies.includes(selectedClass.full_name) || selectedClass.dependencies.includes(c.full_name)
-      })
+      const dependentsAndDependencies = this.graphSelectedClasses.map((selectedClass) => {
+        return this.dependentsAndDependenciesOf(selectedClass)
+      }).flat()
+      const dataSet = this.graphSelectedClasses.concat(dependentsAndDependencies)
 
-      return dependentsAndDependencies.concat(selectedClass)
+      return uniq(dataSet, 'full_name')
+    },
+
+    graphSelectedClassesNames() {
+      return this.graphSelectedClasses.map((c) => c.full_name)
     }
   },
 
   methods: {
-    selectClass(classData) {
-      this.selectedClass = classData.full_name
-      this.showFullGraph = false
+    toggleClassFromGraph(klass) {
+      if (this.graphSelectedClassesNames.includes(klass.full_name)) {
+        this.graphSelectedClasses = this.graphSelectedClasses.filter((c) => c.full_name != klass.full_name)
+      } else {
+        this.graphSelectedClasses.push(klass)
+      }
     },
     selectFullGraph() {
-      this.showFullGraph = true
-      this.selectedClass = ''
+      this.graphSelectedClasses = this.classData
+    },
+    clearGraph() {
+      this.graphSelectedClasses = []
     },
     sortClasses(collection) {
       return collection.slice().sort(this.classSortFunction)
@@ -123,6 +121,15 @@ export default {
       } else if (criteria == 'linesOfCode') {
         return b.lines_of_code - a.lines_of_code
       }
+    },
+    dependentsAndDependenciesOf(klass) {
+      return this.classesData.filter((anotherClass) => {
+        return anotherClass.dependencies.includes(klass.full_name) ||
+          klass.dependencies.includes(anotherClass.full_name)
+      })
+    },
+    isSelected(klass) {
+      return this.graphSelectedClassesNames.includes(klass.full_name)
     }
   }
 }
@@ -196,10 +203,17 @@ h4 { font-size: 14px; }
   margin: 0 20px 10px 15px;
 }
 
-.full-graph-button {
+.clear-graph-button {
   position: absolute;
   right: 15px;
   top: 10px;
+  z-index: 1;
+}
+
+.full-graph-button {
+  position: absolute;
+  right: 15px;
+  top: 45px;
   z-index: 1;
 }
 
