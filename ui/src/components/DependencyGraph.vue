@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="graph-toolbar">
-      <el-button size="mini" @click="onlyDirectEdges = !onlyDirectEdges">Toggle secundary dependencies</el-button>
+      <el-checkbox v-model="showSecundaryDependencies">Show secundary dependencies</el-checkbox>
     </div>
 
     <div id="dependency-graph"></div>
@@ -55,10 +55,10 @@ export default {
   },
   data() {
     return {
-      graph: { destroy: () => {} },
+      graph: null,
       nodesDataset: [],
       highlightActive: false,
-      onlyDirectEdges: false
+      showSecundaryDependencies: true
     }
   },
 
@@ -87,7 +87,7 @@ export default {
 
       const edges = this.classesData.map((klass) => {
         return klass.dependencies.map((dependency) => {
-          if (this.onlyDirectEdges && (dependency != this.selectedClass && klass.full_name != this.selectedClass)) {
+          if (!this.showSecundaryDependencies && this.isSecundaryDependency(klass, dependency)) {
             return null
           } else {
             return { from: klass.full_name, to: dependency }
@@ -111,8 +111,14 @@ export default {
       const data = { nodes, edges }
 
       this.nodesDataset = nodes
-      this.graph.destroy()
+
+      if (this.graph) { this.graph.destroy() }
       this.graph = new vis.Network(container, data, GRAPH_OPTIONS);
+      this.graph.moveTo({ scale: 0.5, offset: { x: 200, y: 0 }})
+    },
+
+    isSecundaryDependency(klass, dependency) {
+      return dependency != this.selectedClass && klass.full_name != this.selectedClass
     }
   }
 }
@@ -132,7 +138,7 @@ export default {
   z-index: 3;
 }
 
-.graph-toolbar .el-button {
+.graph-toolbar .el-checkbox {
   float: right;
 }
 </style>
