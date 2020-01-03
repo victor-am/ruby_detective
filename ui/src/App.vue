@@ -11,6 +11,7 @@
             <el-radio-button label="dependents">Dependents</el-radio-button>
             <el-radio-button label="linesOfCode">LoC</el-radio-button>
             <el-radio-button label="dependencies">Dependencies</el-radio-button>
+            <el-radio-button label="selection">Selection</el-radio-button>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -53,7 +54,6 @@ export default {
       classSearchTerm: '',
       visualClassSearchTerm: '',
       graphSelectedClasses: [],
-      showFullGraph: false,
       sortCriteria: 'linesOfCode'
     }
   },
@@ -74,20 +74,18 @@ export default {
       if (this.classSearchTerm == '') {
         return this.sortClasses(this.classesData)
       } else {
-        const searchResult = this.fuzzySearcher.search(this.classSearchTerm)
-        return this.sortClasses(searchResult)
+        const searchResults = this.fuzzySearcher.search(this.classSearchTerm)
+        return this.sortClasses(searchResults)
       }
     },
 
     classesFilteredBySelection() {
-      if (this.showFullGraph == true) { return this.classesData }
-
       const dependentsAndDependencies = this.graphSelectedClasses.map((selectedClass) => {
         return this.dependentsAndDependenciesOf(selectedClass)
       }).flat()
-      const dataSet = this.graphSelectedClasses.concat(dependentsAndDependencies)
+      const dataset = this.graphSelectedClasses.concat(dependentsAndDependencies)
 
-      return uniq(dataSet, 'full_name')
+      return uniq(dataset, 'full_name')
     },
 
     graphSelectedClassesNames() {
@@ -97,14 +95,14 @@ export default {
 
   methods: {
     toggleClassFromGraph(klass) {
-      if (this.graphSelectedClassesNames.includes(klass.full_name)) {
+      if (this.isSelected(klass)) {
         this.graphSelectedClasses = this.graphSelectedClasses.filter((c) => c.full_name != klass.full_name)
       } else {
         this.graphSelectedClasses.push(klass)
       }
     },
     selectFullGraph() {
-      this.graphSelectedClasses = this.classData
+      this.graphSelectedClasses = this.classesData
     },
     clearGraph() {
       this.graphSelectedClasses = []
@@ -114,12 +112,15 @@ export default {
     },
     classSortFunction(a, b) {
       const criteria = this.sortCriteria
+
       if (criteria == 'dependents') {
-        return b.dependents.length - a.dependents.length
+        return b.dependents.length - a.dependents.length;
       } else if (criteria == 'dependencies') {
-        return b.dependencies.length - a.dependencies.length
+        return b.dependencies.length - a.dependencies.length;
       } else if (criteria == 'linesOfCode') {
-        return b.lines_of_code - a.lines_of_code
+        return b.lines_of_code - a.lines_of_code;
+      } else if (criteria == 'selection') {
+        return (a === b)? 0 : this.isSelected(a)? -1 : 1;
       }
     },
     dependentsAndDependenciesOf(klass) {
