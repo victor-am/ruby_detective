@@ -10,6 +10,7 @@
 
 <script>
 import vis from 'vis-network'
+import differenceWith from 'lodash/differenceWith'
 
 const GRAPH_OPTIONS = {
   physics: {
@@ -28,6 +29,12 @@ const GRAPH_OPTIONS = {
         drawThreshold: 0,
         maxVisible: 0
       }
+    },
+    label: {
+      min: 30,
+      max: 30,
+      drawThreshold: 0,
+      maxVisible: 0
     },
     font: {
       size: 12,
@@ -56,9 +63,9 @@ export default {
   data() {
     return {
       graph: null,
-      nodesDataset: [],
-      highlightActive: false,
-      showSecundaryDependencies: true
+      showSecundaryDependencies: true,
+      nodesDataset: null,
+      edgesDataset: null
     }
   },
 
@@ -68,7 +75,11 @@ export default {
 
   watch: {
     dependencyGraphData() {
-      this.buildGraph()
+      if (this.graph) {
+        this.updateGraph()
+      } else {
+        this.buildGraph()
+      }
     }
   },
 
@@ -100,16 +111,31 @@ export default {
 
   methods: {
     buildGraph() {
-      const nodes = new vis.DataSet(this.dependencyGraphData.nodes);
-      const edges = new vis.DataSet(this.dependencyGraphData.edges);
       const container = document.getElementById("dependency-graph");
-      const data = { nodes, edges }
+      this.nodesDataset = new vis.DataSet(this.dependencyGraphData.nodes);
+      this.edgesDataset = new vis.DataSet(this.dependencyGraphData.edges);
+      const data = { nodes: this.nodesDataset, edges: this.edgesDataset }
 
-      this.nodesDataset = nodes
-
-      if (this.graph) { this.graph.destroy() }
       this.graph = new vis.Network(container, data, GRAPH_OPTIONS);
       this.graph.moveTo({ scale: 0.5, offset: { x: 200, y: 0 }})
+    },
+
+    updateGraph() {
+      const isSameId = (a, b) => a.id === b.id
+
+      const currentlyDrawnNodes = this.nodesDataset.get()
+      const nodes = this.dependencyGraphData.nodes
+      const extraNodes = differenceWith(currentlyDrawnNodes, nodes, isSameId)
+      const missingNodes = differenceWith(nodes, currentlyDrawnNodes, isSameId)
+      this.nodesDataset.add(missingNodes)
+      this.nodesDataset.remove(extraNodes)
+
+      const currentlyDrawnEdges = this.edgesDataset.get()
+      const edges = this.dependencyGraphData.edges
+      const extraEdges = differenceWith(currentlyDrawnEdges, edges, isSameId)
+      const missingEdges = differenceWith(edges, currentlyDrawnEdges, isSameId)
+      this.edgesDataset.add(missingEdges)
+      this.edgesDataset.remove(extraEdges)
     },
 
     isSecundaryDependency(dependent_name, dependency_name) {
