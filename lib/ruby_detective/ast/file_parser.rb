@@ -15,8 +15,9 @@ module RubyDetective
         raw_ast = Parser::CurrentRuby.parse(code)
         return false if raw_ast.nil? # Empty file scenario
 
-        rich_ast = AST::NodeFactory.build(raw_ast, file_path: clean_path)
-        rich_ast.process_all_children!
+        factory = AST::NodeFactory.new(raw_ast, file_path: clean_path)
+        rich_ast = factory.build
+        factory.process_all_children
 
         AST::Interpreter.interpret_node_and_populate_store(
           rich_ast,

@@ -35,8 +35,8 @@ module RubyDetective
           type == :constant
         end
 
-        def root_sign_node?
-          type == :root_sign
+        def absolute_path_sign_node?
+          type == :absolute_path_sign
         end
 
         def value_node?
@@ -66,30 +66,14 @@ module RubyDetective
         end
 
         def query
-          AST::Query.new(self)
+          Query.new(self)
         end
-
-        # TODO: Move this outside
-        # Should keep inside the nodes code only stuff that works with a fully
-        # built rich AST
-        def process_all_children!
-          raw_children.each do |raw_child_node|
-            child_node = AST::NodeFactory.build(
-              raw_child_node,
-              file_path: file_path,
-              parent_node: self
-            )
-
-            child_node.process_all_children!
-            @children << child_node
-          end
-        end
-
-        private
 
         def raw_children
           ast_node.children
         end
+
+        private
 
         def build_namespace(node, acc = [])
           return acc.flatten.compact if node.nil?

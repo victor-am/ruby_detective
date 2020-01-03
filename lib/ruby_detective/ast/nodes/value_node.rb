@@ -21,8 +21,6 @@ module RubyDetective
           parent_node.last_line
         end
 
-        private
-
         def raw_children
           []
         end

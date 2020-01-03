@@ -1,9 +1,9 @@
 module RubyDetective
   module AST
     module Nodes
-      class RootSignNode < GenericNode
+      class AbsolutePathSignNode < GenericNode
         def type
-          :root_sign
+          :absolute_path_sign
         end
       end
     end

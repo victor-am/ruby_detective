@@ -1,14 +1,14 @@
 module RubyDetective
   module AST
     class NodeFactory
-      attr_reader :node, :file_path, :parent_node
+      attr_reader :node, :rich_node, :file_path, :parent_node
 
       # A dictionary that converts the Parser gem type to our Rich AST type
       NODE_TYPE_DICTIONARY = {
         const: :constant,
         class: :class,
         module: :module,
-        cbase: :root_sign
+        cbase: :absolute_path_sign
       }
       # The following types also exist:
       #
@@ -17,16 +17,27 @@ module RubyDetective
 
       def initialize(node, file_path:, parent_node: nil)
         @node = node
+        @rich_node = nil
         @file_path = file_path
         @parent_node = parent_node
       end
 
-      def self.build(*args)
-        new(*args).build
+      def build
+        @rich_node = node_class.new(node, file_path: file_path, parent_node: parent_node)
       end
 
-      def build
-        node_class.new(node, file_path: file_path, parent_node: parent_node)
+      def process_all_children
+        rich_node.raw_children.each do |raw_child_node|
+          factory = self.class.new(
+            raw_child_node,
+            file_path: file_path,
+            parent_node: rich_node
+          )
+          child_node = factory.build
+
+          rich_node.children << child_node
+          factory.process_all_children
+        end
       end
 
       private
@@ -39,8 +50,8 @@ module RubyDetective
           Nodes::ModuleDeclarationNode
         when :constant
           Nodes::ConstantReferenceNode
-        when :root_sign
-          Nodes::RootSignNode
+        when :absolute_path_sign
+          Nodes::AbsolutePathSignNode
         when :value
           Nodes::ValueNode
         when :generic

@@ -23,7 +23,7 @@ module RubyDetective
 
           if nested_constant.constant_reference_node?
             nested_constant.constant_path + [constant_name]
-          elsif nested_constant.root_sign_node?
+          elsif nested_constant.absolute_path_sign_node?
             # This is used to signify that the constant path was forced to start
             # from the root, for example: "::Foo::Bar"
             [:"::"] + [constant_name]
