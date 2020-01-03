@@ -24,3 +24,7 @@ require_relative "ruby_detective/ast/nodes/value_node"
 require_relative "ruby_detective/ast/nodes/constant_reference_node"
 require_relative "ruby_detective/ast/nodes/class_declaration_node"
 require_relative "ruby_detective/ast/nodes/module_declaration_node"
+
+if ENV["ENV"] == "development"
+  require "pry"
+end
