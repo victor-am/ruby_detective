@@ -11,6 +11,7 @@ require_relative "ruby_detective/source_representation/data_store"
 require_relative "ruby_detective/source_representation/query"
 require_relative "ruby_detective/source_representation/dependency_resolver"
 
+require_relative "ruby_detective/source_representation/entities/base"
 require_relative "ruby_detective/source_representation/entities/klass"
 require_relative "ruby_detective/source_representation/entities/constant"
 
@@ -24,6 +25,7 @@ require_relative "ruby_detective/ast/nodes/value_node"
 require_relative "ruby_detective/ast/nodes/constant_reference_node"
 require_relative "ruby_detective/ast/nodes/class_declaration_node"
 require_relative "ruby_detective/ast/nodes/module_declaration_node"
+require_relative "ruby_detective/ast/nodes/root_sign_node"
 
 if ENV["ENV"] == "development"
   require "pry"

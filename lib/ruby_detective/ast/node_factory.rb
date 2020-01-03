@@ -5,9 +5,10 @@ module RubyDetective
 
       # A dictionary that converts the Parser gem type to our Rich AST type
       NODE_TYPE_DICTIONARY = {
-        const: :const,
+        const: :constant,
         class: :class,
-        module: :module
+        module: :module,
+        cbase: :root_sign
       }
       # The following types also exist:
       #
@@ -36,8 +37,10 @@ module RubyDetective
           Nodes::ClassDeclarationNode
         when :module
           Nodes::ModuleDeclarationNode
-        when :const
+        when :constant
           Nodes::ConstantReferenceNode
+        when :root_sign
+          Nodes::RootSignNode
         when :value
           Nodes::ValueNode
         when :generic

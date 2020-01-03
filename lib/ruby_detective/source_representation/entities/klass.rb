@@ -1,7 +1,7 @@
 module RubyDetective
   module SourceRepresentation
     module Entities
-      class Klass
+      class Klass < Base
         attr_reader :name, :namespace, :file_path, :inheritance_class_name, :lines_of_code
 
         def initialize(name, namespace, inheritance_class_name: nil, file_path:, first_line:, last_line:, data_store:)
@@ -13,17 +13,9 @@ module RubyDetective
           @data_store = data_store
         end
 
-        def full_name
-          full_namespace.join("::")
-        end
-
-        def full_namespace
-          namespace + [name]
-        end
-
         def constants
           data_store.query
-          .constants(where: { at: self })
+          .constants(where: { caller: self })
         end
 
         def dependencies
@@ -36,7 +28,7 @@ module RubyDetective
         def dependents
           data_store.query
           .constants(where: { to: self })
-          .map(&:at)
+          .map(&:caller)
           .compact
           .reject{ |c| c.name == name } # Removes circular dependencies
         end

@@ -16,11 +16,11 @@ module RubyDetective
       classes_data_as_json = classes.map do |c|
         {
           name: c.name,
-          full_name: c.full_name,
-          namespace: c.namespace.join("::"),
+          full_name: c.path_as_text,
+          namespace: c.namespace_as_text,
           lines_of_code: c.lines_of_code,
-          dependencies: c.dependencies.map(&:full_name),
-          dependents: c.dependents.map(&:full_name),
+          dependencies: c.dependencies.map(&:path_as_text),
+          dependents: c.dependents.map(&:path_as_text),
           file_path: c.file_path
         }
       end.to_json

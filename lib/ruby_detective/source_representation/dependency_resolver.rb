@@ -22,7 +22,6 @@ module RubyDetective
         classes.each do |klass|
           klass.constants.each do |constant|
             referred_class = find_referred_class(constant)
-
             next if referred_class.nil?
 
             constant.register_referred_class(referred_class)
@@ -31,18 +30,11 @@ module RubyDetective
       end
 
       def find_referred_class(constant)
-        possible_matches = classes.map do |entity|
-          match_score = calculate_match_score_through_cascading(constant, entity)
-          { match_score: match_score, entity: entity }
-        end.reject{ |pm| pm[:match_score] == 0 }
-
-        possible_matches.sort_by{ |e| e[:match_score] }.first&.fetch(:entity)
-      end
-
-      def calculate_match_score_through_cascading(constant, entity)
-        constant.full_namespace.reverse.each_with_index.take_while do |name, index|
-          entity.full_namespace.reverse[index] == name
-        end.size
+        classes.select do |klass|
+          constant.possible_paths_of_referenced_entity.find do |possible_path|
+            klass.path == possible_path
+          end
+        end.compact.first
       end
     end
   end

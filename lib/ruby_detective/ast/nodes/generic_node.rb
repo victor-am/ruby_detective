@@ -32,7 +32,11 @@ module RubyDetective
         end
 
         def constant_reference_node?
-          type == :const
+          type == :constant
+        end
+
+        def root_sign_node?
+          type == :root_sign
         end
 
         def value_node?

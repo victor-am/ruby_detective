@@ -17,11 +17,11 @@ module RubyDetective
       end
 
       puts "Finding dependencies..."
-      SourceRepresentation::DependencyResolver.resolve_and_populate_store(data_store)
+      data_store.resolve_dependencies
 
       if ENV["ENV"] == "development"
         puts "Generating output .json file..."
-        json = JSONBuilder.build(data_store)
+        json = ::RubyDetective::JSONBuilder.build(data_store)
 
         output_file_path = "ui/src/data.json"
         File.delete(output_file_path) if File.exist?(output_file_path)

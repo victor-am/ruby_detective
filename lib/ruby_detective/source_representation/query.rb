@@ -13,8 +13,8 @@ module RubyDetective
         case where
         when -> (w) { w.key?(:to) }
           constants.select { |c| c.to == where[:to] }
-        when -> (w) { w.key?(:at) }
-          constants.select { |c| c.at == where[:at] }
+        when -> (w) { w.key?(:caller) }
+          constants.select { |c| c.caller == where[:caller] }
         else
           constants
         end
@@ -24,8 +24,8 @@ module RubyDetective
         classes = store.classes
 
         case where
-        when -> (w) { w.key?(:full_name) }
-          classes.select { |c| c.full_name == where[:full_name] }
+        when -> (w) { w.key?(:path) }
+          classes.select { |c| c.path == where[:path] }
         else
           classes
         end

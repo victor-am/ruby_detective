@@ -19,6 +19,10 @@ module RubyDetective
         "#<RubyDetective::SourceRepresentation::DataStore>"
       end
 
+      def resolve_dependencies
+        SourceRepresentation::DependencyResolver.resolve_and_populate_store(self)
+      end
+
       def register_class(name, namespace, inheritance_class_name:, file_path:, first_line:, last_line:)
         klass = Entities::Klass.new(
           name,
@@ -30,7 +34,7 @@ module RubyDetective
           last_line: last_line
         )
 
-        existing_class = query.classes(where: { full_name: klass.full_name }).first
+        existing_class = query.classes(where: { path: klass.path }).first
 
         if existing_class
           existing_class.merge(klass)
@@ -41,11 +45,13 @@ module RubyDetective
         end
       end
 
-      def register_constant(name, file_path:, at:, to: nil)
+      def register_constant(name, namespace, file_path:, caller:, to: nil)
         constant = Entities::Constant.new(
           name,
+          namespace,
           data_store: self,
-          at: at,
+          caller: caller,
+          to: to,
           file_path: file_path
         )
         @constants << constant
