@@ -10,10 +10,10 @@ module RubyDetective
       def constants(where: {})
         constants = store.constants
 
-        case where
-        when -> (w) { w.key?(:to) }
+        case
+        when where.key?(:to)
           constants.select { |c| c.to == where[:to] }
-        when -> (w) { w.key?(:caller) }
+        when where.key?(:caller)
           constants.select { |c| c.caller == where[:caller] }
         else
           constants
@@ -23,8 +23,8 @@ module RubyDetective
       def classes(where: {})
         classes = store.classes
 
-        case where
-        when -> (w) { w.key?(:path) }
+        case
+        when where.key?(:path)
           classes.select { |c| c.path == where[:path] }
         else
           classes

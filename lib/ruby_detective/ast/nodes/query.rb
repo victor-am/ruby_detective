@@ -12,8 +12,8 @@ module RubyDetective
         def constant_references(where: {})
           constants = deep_search(node, [:constant_reference_node?])
 
-          case where
-          when -> (w) { w.key?(:namespace) }
+          case
+          when where.key?(:namespace)
             constants.select { |c| c.namespace.include?(where[:namespace].to_sym) }
           else
             constants
@@ -28,8 +28,8 @@ module RubyDetective
         def top_level_constant_references(where: {})
           constants = deep_search(node, [:constant_reference_node?, :top_level_constant?])
 
-          case where
-          when -> (w) { w.key?(:namespace) }
+          case
+          when where.key?(:namespace)
             constants.select { |c| c.namespace.include?(where[:namespace].to_sym) }
           else
             constants
@@ -53,7 +53,6 @@ module RubyDetective
           acc << node if validation_result.all?
 
           node.children.each { |child| send(__method__, child, validation_methods, acc: acc) }
-
           acc.uniq
         end
       end
