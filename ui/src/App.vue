@@ -20,15 +20,24 @@
         <li class="results-stats">
           {{ filteredClasses.length }} results found
         </li>
-        <li class="class-item" v-for="klass in filteredClasses" :key="klass.full_name">
-          <ClassCard :klass="klass" @clickMoreDetails="true" @clickToggleGraph="toggleClassFromGraph" :isSelected="isSelected(klass)"></ClassCard>
+        <li class="class-item" v-for="klass in filteredClasses" :key="klass.full_name" :ref="'class-card-' + klass.full_name">
+          <ClassCard
+            :klass="klass"
+            @clickMoreDetails="true"
+            @clickToggleGraph="toggleClassFromGraph"
+            :isSelected="isSelected(klass)"/>
         </li>
       </ul>
     </div>
 
     <el-button size="mini" @click="clearGraph" class="clear-graph-button">Clear {{ graphSelectedClasses.length }} items selected</el-button>
     <el-button size="mini" @click="selectFullGraph" class="full-graph-button">Show full project graph</el-button>
-    <DependencyGraph class="graph" @nodeDoubleClicked="addToGraphByFullName" :classesData="classesFilteredBySelection" :selectedClasses="graphSelectedClasses"/>
+    <DependencyGraph
+      class="graph"
+      @nodeSelected="scrollToClassCard"
+      @nodeDoubleClicked="addToGraphByFullName"
+      :classesData="classesFilteredBySelection"
+      :selectedClasses="graphSelectedClasses"/>
   </div>
 </template>
 
@@ -50,11 +59,11 @@ export default {
   },
   data() {
     return {
-      classesData: window.CLASSES_DATA,
+      allClassesData: window.CLASSES_DATA,
       classSearchTerm: '',
       visualClassSearchTerm: '',
       graphSelectedClasses: [],
-      sortCriteria: 'linesOfCode'
+      sortCriteria: ''
     }
   },
 
@@ -66,28 +75,23 @@ export default {
 
   computed: {
     fuzzySearcher() {
-      const options = { threshold: 0.1, keys: ['full_name', 'file_path'] }
-      return new Fuse(this.classesData, options)
+      const options = { threshold: 0.2, keys: ['full_name', 'file_path'] }
+      return new Fuse(this.allClassesData, options)
     },
-
     filteredClasses() {
       if (this.classSearchTerm == '') {
-        return this.sortClasses(this.classesData)
+        return this.sortClasses(this.allClassesData)
       } else {
         const searchResults = this.fuzzySearcher.search(this.classSearchTerm)
         return this.sortClasses(searchResults)
       }
     },
-
     classesFilteredBySelection() {
-      const dependentsAndDependencies = this.graphSelectedClasses.map((selectedClass) => {
-        return this.dependentsAndDependenciesOf(selectedClass)
-      }).flat()
+      const dependentsAndDependencies = this.dependentsAndDependenciesOf(this.graphSelectedClasses)
       const dataset = this.graphSelectedClasses.concat(dependentsAndDependencies)
 
       return uniq(dataset, 'full_name')
     },
-
     graphSelectedClassesNames() {
       return this.graphSelectedClasses.map((c) => c.full_name)
     }
@@ -101,12 +105,16 @@ export default {
         this.graphSelectedClasses.push(klass)
       }
     },
-    addToGraphByFullName(event) {
-      const klass = this.classesData.find((c) => c.full_name == event.nodeId)
+    addToGraphByFullName({ nodeId }) {
+      const klass = this.allClassesData.find((c) => c.full_name == nodeId)
       if (!this.isSelected(klass)) { this.graphSelectedClasses.push(klass) }
     },
+    scrollToClassCard({ nodeId }) {
+      const element = this.$refs[`class-card-${nodeId}`][0]
+      this.$nextTick(() => { element.scrollIntoView() });
+    },
     selectFullGraph() {
-      this.graphSelectedClasses = this.classesData
+      this.graphSelectedClasses = this.allClassesData
     },
     clearGraph() {
       this.graphSelectedClasses = []
@@ -125,13 +133,19 @@ export default {
         return b.lines_of_code - a.lines_of_code;
       } else if (criteria == 'selection') {
         return (a === b)? 0 : this.isSelected(a)? -1 : 1;
+      } else {
+        return 0
       }
     },
-    dependentsAndDependenciesOf(klass) {
-      return this.classesData.filter((anotherClass) => {
-        return anotherClass.dependencies.includes(klass.full_name) ||
-          klass.dependencies.includes(anotherClass.full_name)
-      })
+    dependentsAndDependenciesOf(classes) {
+      const dependentsAndDependencies = classes.map((selectedClass) => {
+        return this.allClassesData.filter((anotherClass) => {
+          return anotherClass.dependencies.includes(selectedClass.full_name) ||
+          selectedClass.dependencies.includes(anotherClass.full_name)
+        })
+      }).flat()
+
+      return uniq(dependentsAndDependencies, 'full_name')
     },
     isSelected(klass) {
       return this.graphSelectedClassesNames.includes(klass.full_name)

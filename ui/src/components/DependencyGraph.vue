@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="graph-toolbar">
-      <el-checkbox v-model="showSecundaryDependencies">Show secundary dependencies</el-checkbox>
+      <el-checkbox v-model="showSecundaryDependencyNodes">Show second-level dependency nodes</el-checkbox>
+      <el-checkbox v-model="showSecundaryDependencyEdges">Show second-level dependency edges</el-checkbox>
     </div>
 
     <div id="dependency-graph"></div>
@@ -24,7 +25,7 @@ const GRAPH_OPTIONS = {
     shape: "dot",
     scaling: {
       min: 10,
-      max: 50,
+      max: 60,
       label: {
         min: 30,
         max: 30,
@@ -58,7 +59,8 @@ export default {
   data() {
     return {
       graph: null,
-      showSecundaryDependencies: true,
+      showSecundaryDependencyNodes: true,
+      showSecundaryDependencyEdges: true,
       nodesDataset: null,
       edgesDataset: null
     }
@@ -70,35 +72,33 @@ export default {
 
   watch: {
     dependencyGraphData() {
-      if (graph) {
-        this.updateGraph()
-      } else {
-        this.buildGraph()
-      }
+      graph ? this.updateGraph() : this.buildGraph()
     }
   },
 
   computed: {
     dependencyGraphData() {
-      const nodes = this.classesData.map((klass) => {
-        return {
-          id: klass.full_name,
-          label: klass.full_name,
-          title: klass.full_name,
-          value: klass.lines_of_code,
-          group: klass.namespace
-        }
-      })
+      const skipSecundaryNodesIfOptionDemandsIt = (klass) => this.showSecundaryDependencyNodes || this.isPrimaryDependencyNode(klass)
 
-      const edges = this.classesData.map((dependent) => {
-        return dependent.dependencies.map((dependency_name) => {
-          if (!this.showSecundaryDependencies && this.isSecundaryDependency(dependent.full_name, dependency_name)) {
-            return null
-          } else {
-            return { from: dependent.full_name, to: dependency_name }
+      const nodes = this.classesData
+        .filter(skipSecundaryNodesIfOptionDemandsIt)
+        .map((klass) => {
+          return {
+            id: klass.full_name,
+            label: klass.full_name,
+            title: klass.full_name,
+            value: klass.lines_of_code,
+            group: klass.namespace
           }
         })
-      }).flat().filter(n => n)
+
+      const edges = this.classesData
+        .map((dependent) => {
+          return dependent.dependencies
+            .filter((dependency) => this.showSecundaryDependencyEdges || this.isPrimaryDependencyEdge(dependent.full_name, dependency))
+            .map((dependency_name) => { return { from: dependent.full_name, to: dependency_name } })
+        })
+        .flat()
 
       return { nodes, edges }
     }
@@ -113,36 +113,42 @@ export default {
 
       graph = new vis.Network(container, data, GRAPH_OPTIONS);
 
-      graph.on("doubleClick", (params) => {
-        if (params.nodes[0]) {
-          this.$emit("nodeDoubleClicked", { nodeId: params.nodes[0] })
-        }
-      });
+      graph.on("doubleClick", ({ nodes }) => {
+        if (nodes[0]) { this.$emit("nodeDoubleClicked", { nodeId: nodes[0] }) }
+      })
+      graph.on("selectNode", ({ nodes }) => {
+        if (nodes[0]) { this.$emit("nodeSelected", { nodeId: nodes[0] }) }
+      })
 
       graph.moveTo({ scale: 0.5, offset: { x: 200, y: 0 }})
     },
 
     updateGraph() {
-      const isSameId = (a, b) => a.id === b.id
+      const hasSameId = (a, b) => a.id === b.id
 
       const currentlyDrawnNodes = this.nodesDataset.get()
       const nodes = this.dependencyGraphData.nodes
-      const extraNodes = differenceWith(currentlyDrawnNodes, nodes, isSameId)
-      const missingNodes = differenceWith(nodes, currentlyDrawnNodes, isSameId)
+      const extraNodes = differenceWith(currentlyDrawnNodes, nodes, hasSameId)
+      const missingNodes = differenceWith(nodes, currentlyDrawnNodes, hasSameId)
       this.nodesDataset.add(missingNodes)
       this.nodesDataset.remove(extraNodes)
 
       const currentlyDrawnEdges = this.edgesDataset.get()
       const edges = this.dependencyGraphData.edges
-      const extraEdges = differenceWith(currentlyDrawnEdges, edges, isSameId)
-      const missingEdges = differenceWith(edges, currentlyDrawnEdges, isSameId)
+      const extraEdges = differenceWith(currentlyDrawnEdges, edges, hasSameId)
+      const missingEdges = differenceWith(edges, currentlyDrawnEdges, hasSameId)
       this.edgesDataset.add(missingEdges)
       this.edgesDataset.remove(extraEdges)
     },
 
-    isSecundaryDependency(dependent_name, dependency_name) {
+    isPrimaryDependencyNode(klass) {
       const selectedClasses = this.selectedClasses.map((c) => c.full_name)
-      return !selectedClasses.includes(dependency_name) && !selectedClasses.includes(dependent_name)
+      return selectedClasses.includes(klass.full_name)
+    },
+
+    isPrimaryDependencyEdge(dependent_name, dependency_name) {
+      const selectedClasses = this.selectedClasses.map((c) => c.full_name)
+      return selectedClasses.includes(dependency_name) || selectedClasses.includes(dependent_name)
     }
   }
 }
@@ -158,12 +164,12 @@ export default {
 .graph-toolbar {
   position: absolute;
   top: 80px;
-  width: 300px;
+  width: 270px;
   right: 15px;
   z-index: 1;
 }
 
 .graph-toolbar .el-checkbox {
-  float: right;
+
 }
 </style>
