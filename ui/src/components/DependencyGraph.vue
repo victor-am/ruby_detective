@@ -112,6 +112,13 @@ export default {
       const data = { nodes: this.nodesDataset, edges: this.edgesDataset }
 
       graph = new vis.Network(container, data, GRAPH_OPTIONS);
+
+      graph.on("doubleClick", (params) => {
+        if (params.nodes[0]) {
+          this.$emit("nodeDoubleClicked", { nodeId: params.nodes[0] })
+        }
+      });
+
       graph.moveTo({ scale: 0.5, offset: { x: 200, y: 0 }})
     },
 

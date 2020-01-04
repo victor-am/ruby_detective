@@ -28,7 +28,7 @@
 
     <el-button size="mini" @click="clearGraph" class="clear-graph-button">Clear {{ graphSelectedClasses.length }} items selected</el-button>
     <el-button size="mini" @click="selectFullGraph" class="full-graph-button">Show full project graph</el-button>
-    <DependencyGraph class="graph" :classesData="classesFilteredBySelection" :selectedClasses="graphSelectedClasses"/>
+    <DependencyGraph class="graph" @nodeDoubleClicked="addToGraphByFullName" :classesData="classesFilteredBySelection" :selectedClasses="graphSelectedClasses"/>
   </div>
 </template>
 
@@ -59,7 +59,7 @@ export default {
   },
 
   watch: {
-    filteredClasses() {
+    classSearchTerm() {
       this.$nextTick(() => { this.$refs.classList.scrollTop = 0 });
     }
   },
@@ -100,6 +100,10 @@ export default {
       } else {
         this.graphSelectedClasses.push(klass)
       }
+    },
+    addToGraphByFullName(event) {
+      const klass = this.classesData.find((c) => c.full_name == event.nodeId)
+      if (!this.isSelected(klass)) { this.graphSelectedClasses.push(klass) }
     },
     selectFullGraph() {
       this.graphSelectedClasses = this.classesData
