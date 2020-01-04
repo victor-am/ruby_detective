@@ -1,32 +1,32 @@
 <template>
   <el-card>
-    <div slot="header" class="clearfix">
+    <div slot="header" class="header clearfix">
       <el-tag type="success" size="mini" v-show="isSelected">Selected</el-tag>
 
-      <h3>{{ classData.full_name }}</h3>
-      <h4 class="sub-title">{{ classData.file_path }}</h4>
+      <h3 class="title" :title="klass.full_name">{{ klass.full_name }}</h3>
+      <h4 class="sub-title">{{ klass.file_path }}</h4>
     </div>
     <div class="extra-info">
       <p>
-        Dependencies:
-        <span class="value">{{ classData.dependencies.length }}</span>
+        Dependencies
+        <span class="value">{{ klass.dependencies.length }}</span>
       </p>
       <p>
-        Dependents:
-        <span class="value">{{ classData.dependents.length }}</span>
+        LoC
+        <span class="value">{{ klass.lines_of_code }}</span>
       </p>
       <p>
-        Lines of code:
-        <span class="value">{{ classData.lines_of_code }}</span>
+        Dependents
+        <span class="value">{{ klass.dependents.length }}</span>
       </p>
     </div>
 
     <div class="action-bar">
-      <el-button class="graph-button" type="text" @click="$emit('clickMoreDetails', classData)">
+      <el-button class="graph-button" type="text" @click="$emit('clickMoreDetails', klass)">
         More information
       </el-button>
 
-      <el-button class="graph-button" type="text" @click="$emit('clickToggleGraph', classData)">
+      <el-button class="graph-button" type="text" @click="$emit('clickToggleGraph', klass)">
         <GraphIcon/> {{ toggleGraphLabel }}
       </el-button>
     </div>
@@ -40,16 +40,12 @@ export default {
   name: 'ClassCard',
   components: { GraphIcon },
   props: {
-    classData: Object,
+    klass: Object,
     isSelected: Boolean
   },
   computed: {
     toggleGraphLabel() {
-      if (this.isSelected) {
-        return "Remove from graph"
-      } else {
-        return "Add to graph"
-      }
+      return this.isSelected ? "Remove from graph" : "Add to graph"
     }
   }
 }
@@ -61,7 +57,6 @@ export default {
   color: #555;
   display: flex;
   justify-content: space-around;
-  flex-wrap: wrap;
   margin-bottom: 15px;
 }
 
@@ -80,6 +75,22 @@ export default {
   padding: 3px 0;
 }
 
+.header {
+  position: relative;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100% - 60px);
+}
+
+.header .el-tag {
+  position: absolute;
+  top: -5px;
+  right: -7px;
+}
+
 .sub-title {
   font-size: 12px;
   color: #666;
@@ -88,9 +99,7 @@ export default {
 .action-bar {
   display: flex;
   justify-content: space-between;
-}
-
-.el-tag {
-  float: right;
+  border-top: 1px solid #eceef6;
+  padding-top: 15px;
 }
 </style>

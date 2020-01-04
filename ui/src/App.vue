@@ -20,8 +20,8 @@
         <li class="results-stats">
           {{ filteredClasses.length }} results found
         </li>
-        <li class="class-item" v-for="classData in filteredClasses" :key="classData.full_name">
-          <ClassCard :classData="classData" @clickMoreDetails="true" @clickToggleGraph="toggleClassFromGraph" :isSelected="isSelected(classData)"></ClassCard>
+        <li class="class-item" v-for="klass in filteredClasses" :key="klass.full_name">
+          <ClassCard :klass="klass" @clickMoreDetails="true" @clickToggleGraph="toggleClassFromGraph" :isSelected="isSelected(klass)"></ClassCard>
         </li>
       </ul>
     </div>
@@ -170,7 +170,7 @@ h4 { font-size: 14px; }
 
 .toolbar {
   width: 25%;
-  min-width: 310px;
+  min-width: 380px;
   height: 100%;
   display: flex;
   flex-direction: column;
