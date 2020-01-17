@@ -4,7 +4,8 @@ module RubyDetective
   class JSONBuilder
     attr_reader :classes
 
-    def initialize(data_store)
+    def initialize
+      data_store = SourceRepresentation::DataStore.instance
       @classes = data_store.classes
     end
 

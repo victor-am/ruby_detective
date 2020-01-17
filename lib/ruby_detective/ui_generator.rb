@@ -2,15 +2,9 @@ require "erb"
 
 module RubyDetective
   class UIGenerator
-    attr_reader :data_store
-
-    def initialize(data_store)
-      @data_store = data_store
-    end
-
-    def generate
+    def self.generate
       # Variable used inside the template
-      classes_data_as_json = JSONBuilder.build(data_store)
+      classes_data_as_json = JSONBuilder.build
 
       template_path = File.join(File.dirname(__FILE__), "../../views/template.html.erb")
       erb_template = File.read(template_path)

@@ -1,7 +1,7 @@
 require './spec/spec_helper'
 
 RSpec.describe RubyDetective::SourceRepresentation::DependencyResolver do
-  let(:data_store) { RubyDetective::SourceRepresentation::DataStore.new }
+  let(:data_store) { RubyDetective::SourceRepresentation::DataStore.instance }
 
   before do
     simple_class = RubyDetective::SourceRepresentation::Entities::Klass.new(
@@ -9,8 +9,7 @@ RSpec.describe RubyDetective::SourceRepresentation::DependencyResolver do
       [],
       file_path: "fixtures/simple_class.rb",
       first_line: 1,
-      last_line: 81,
-      data_store: data_store
+      last_line: 81
     )
 
     another_class = RubyDetective::SourceRepresentation::Entities::Klass.new(
@@ -18,14 +17,12 @@ RSpec.describe RubyDetective::SourceRepresentation::DependencyResolver do
       [],
       file_path: "fixtures/another_class.rb",
       first_line: 1,
-      last_line: 36,
-      data_store: data_store
+      last_line: 36
     )
 
     constant = RubyDetective::SourceRepresentation::Entities::Constant.new(
       :AnotherClass,
       file_path: "fixtures/simple_class.rb",
-      data_store: data_store,
       at: simple_class,
       to: another_class
     )

@@ -1,8 +1,12 @@
+require "singleton"
+
 # This class is used as a database of sorts during the
 # analysis execution.
 module RubyDetective
   module SourceRepresentation
     class DataStore
+      include Singleton
+
       attr_reader :classes, :modules, :constants
 
       def initialize
@@ -20,14 +24,13 @@ module RubyDetective
       end
 
       def resolve_dependencies
-        SourceRepresentation::DependencyResolver.resolve_and_populate_store(self)
+        DependencyResolver.resolve_and_populate_store
       end
 
       def register_class(name, namespace, inheritance_class_name:, file_path:, first_line:, last_line:)
         klass = Entities::Klass.new(
           name,
           namespace,
-          data_store: self,
           inheritance_class_name: inheritance_class_name,
           file_path: file_path,
           first_line: first_line,
@@ -49,7 +52,6 @@ module RubyDetective
         constant = Entities::Constant.new(
           name,
           namespace,
-          data_store: self,
           caller: caller,
           to: to,
           file_path: file_path

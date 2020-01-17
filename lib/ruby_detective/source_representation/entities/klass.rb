@@ -4,18 +4,19 @@ module RubyDetective
       class Klass < Base
         attr_reader :name, :namespace, :file_path, :inheritance_class_name, :lines_of_code
 
-        def initialize(name, namespace, inheritance_class_name: nil, file_path:, first_line:, last_line:, data_store:)
+        def initialize(name, namespace, inheritance_class_name: nil, file_path:, first_line:, last_line:)
           @name = name
           @namespace = namespace
           @file_path = file_path
           @inheritance_class_name = inheritance_class_name
           @lines_of_code = last_line - first_line + 1
-          @data_store = data_store
+          @data_store = SourceRepresentation::DataStore.instance
         end
 
         def constants
-          data_store.query
-          .constants(where: { caller: self })
+          data_store
+            .query
+            .constants(where: { caller: self })
         end
 
         def dependencies
