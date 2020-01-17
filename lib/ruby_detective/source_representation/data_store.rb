@@ -7,16 +7,19 @@ module RubyDetective
     class DataStore
       include Singleton
 
-      attr_accessor :classes, :modules, :constants
+      attr_accessor :classes, :constants
 
       def initialize
         @classes = []
-        @modules = []
         @constants = []
       end
 
       def query
         Query.new
+      end
+
+      def clear!
+        initialize
       end
 
       def inspect

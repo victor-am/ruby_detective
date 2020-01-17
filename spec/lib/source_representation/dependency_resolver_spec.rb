@@ -2,6 +2,7 @@ require './spec/spec_helper'
 
 RSpec.describe RubyDetective::SourceRepresentation::DependencyResolver do
   let(:data_store) { RubyDetective::SourceRepresentation::DataStore.instance }
+  before { data_store.clear! }
 
   before do
     simple_class = RubyDetective::SourceRepresentation::Entities::Klass.new(
