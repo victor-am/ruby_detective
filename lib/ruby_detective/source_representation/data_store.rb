@@ -7,7 +7,7 @@ module RubyDetective
     class DataStore
       include Singleton
 
-      attr_reader :classes, :modules, :constants
+      attr_accessor :classes, :modules, :constants
 
       def initialize
         @classes = []
