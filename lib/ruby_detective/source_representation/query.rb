@@ -3,16 +3,16 @@ module RubyDetective
     class Query
       attr_reader :store
 
-      def initialize(store)
-        @store = store
+      def initialize
+        @store = DataStore.instance
       end
 
       def constants(where: {})
         constants = store.constants
 
         case
-        when where.key?(:to)
-          constants.select { |c| c.to == where[:to] }
+        when where.key?(:refers_to)
+          constants.select { |c| c.refers_to == where[:refers_to] }
         when where.key?(:caller)
           constants.select { |c| c.caller == where[:caller] }
         else

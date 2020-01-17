@@ -21,14 +21,14 @@ module RubyDetective
 
         def dependencies
           constants
-          .map(&:to)
+          .map(&:refers_to)
           .compact
           .reject{ |c| c.name == name } # Removes circular dependencies
         end
 
         def dependents
           data_store.query
-          .constants(where: { to: self })
+          .constants(where: { refers_to: self })
           .map(&:caller)
           .compact
           .reject{ |c| c.name == name } # Removes circular dependencies
