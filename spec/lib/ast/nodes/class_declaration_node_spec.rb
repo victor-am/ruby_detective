@@ -2,7 +2,7 @@ require './spec/spec_helper'
 require_relative 'ast_node_shared_example'
 
 root_node = load_code_as_rich_ast_node(:nested_class)
-deep_node = root_node.query.all(where: { type: :class }).last
+deep_node = root_node.query.where(type: :class).last
 
 RSpec.describe RubyDetective::AST::Nodes::ClassDeclarationNode do
   it_behaves_like "AST node", deep_node

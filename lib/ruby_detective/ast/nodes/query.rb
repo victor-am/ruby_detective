@@ -8,6 +8,16 @@ module RubyDetective
           @node = node
         end
 
+        def where(criteria = {})
+          case
+          when criteria.key?(:type)
+            type_validation_function = ->(node) { node.type == criteria[:type] }
+            deep_search(node, [type_validation_function])
+          else
+            deep_search(node)
+          end
+        end
+
         # TODO: ignore constant definitions, only return constant references
         def constant_references(where: {})
           constants = deep_search(node, [:constant_reference_node?])
@@ -46,7 +56,17 @@ module RubyDetective
           return if node.value_node?
 
           validation_result = validation_methods.map do |validation_method|
-            node.respond_to?(validation_method) && node.public_send(validation_method)
+            if validation_method.is_a?(Symbol)
+              node.respond_to?(validation_method) && node.public_send(validation_method)
+            elsif validation_method.is_a?(Proc)
+              begin
+                validation_method.call(node)
+              rescue NoMethodError
+                false
+              end
+            else
+              raise ArgumentError, "Unexpected validation method data type"
+            end
           end
 
           # Only appends the node to the results if all validations passed
