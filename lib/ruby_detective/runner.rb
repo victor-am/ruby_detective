@@ -9,26 +9,24 @@ module RubyDetective
     end
 
     def run
-      data_store = SourceRepresentation::DataStore.new
-
       puts "Processing files..."
       Dir.glob("#{project_path}/**/*.rb") do |file_path|
-        AST::FileParser.new(file_path, project_path, data_store: data_store).parse
+        AST::FileParser.new(file_path, project_path).parse
       end
 
       puts "Finding dependencies..."
-      data_store.resolve_dependencies
+      SourceRepresentation::DataStore.instance.resolve_dependencies
 
       if ENV["ENV"] == "development"
         puts "Generating output .json file..."
-        json = ::RubyDetective::JSONBuilder.build(data_store)
+        json = ::RubyDetective::JSONBuilder.build
 
         output_file_path = "ui/src/data.json"
         File.delete(output_file_path) if File.exist?(output_file_path)
         File.open(output_file_path, "w") { |file| file << json }
       else
         puts "Generating output HTML file..."
-        UIGenerator.new(data_store).generate
+        UIGenerator.generate
       end
 
       puts "Done!"

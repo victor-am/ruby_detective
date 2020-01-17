@@ -3,8 +3,8 @@ module RubyDetective
     class DependencyResolver
       attr_reader :classes
 
-      def initialize(data_store)
-        @classes = data_store.classes
+      def initialize
+        @classes = DataStore.instance.classes
       end
 
       def self.resolve_and_populate_store(*args)

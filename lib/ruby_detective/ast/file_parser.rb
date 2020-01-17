@@ -3,10 +3,9 @@ module RubyDetective
     class FileParser
       attr_reader :path, :analysis
 
-      def initialize(file_path, project_path, data_store:)
+      def initialize(file_path, project_path)
         @path = file_path
         @project_path = project_path
-        @data_store = data_store
       end
 
       def parse
@@ -21,13 +20,12 @@ module RubyDetective
 
         AST::Interpreter.interpret_node_and_populate_store(
           rich_ast,
-          clean_path,
-          data_store: data_store
+          clean_path
         )
       end
 
       private
-      attr_reader :project_path, :data_store
+      attr_reader :project_path
 
       def clean_path
         path.sub(project_path, "")

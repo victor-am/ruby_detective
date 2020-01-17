@@ -3,10 +3,9 @@ module RubyDetective
     class Interpreter
       attr_reader :rich_ast, :classes, :file_path
 
-      def initialize(rich_ast, file_path, data_store:)
+      def initialize(rich_ast, file_path)
         @rich_ast = rich_ast
         @file_path = file_path
-        @data_store = data_store
       end
 
       def self.interpret_node_and_populate_store(*args)
@@ -20,7 +19,6 @@ module RubyDetective
       end
 
       private
-      attr_reader :data_store
 
       def register_classes_and_constants
         rich_ast.query.class_declarations.map do |class_node|
@@ -30,6 +28,7 @@ module RubyDetective
       end
 
       def register_class(node)
+        data_store = SourceRepresentation::DataStore.instance
         data_store.register_class(
           node.class_name,
           node.short_namespace,
@@ -46,6 +45,7 @@ module RubyDetective
           .uniq{ |cr| cr.constant_path } # Removes duplicated constants
 
         constant_nodes.each do |constant_node|
+          data_store = SourceRepresentation::DataStore.instance
           data_store.register_constant(
             constant_node.constant_name,
             constant_node.constant_path[0..-2],

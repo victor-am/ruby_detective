@@ -4,13 +4,13 @@ module RubyDetective
       class Constant < Base
         attr_reader :name, :namespace, :file_path, :caller, :to
 
-        def initialize(name, namespace, file_path:, caller:, to: nil, data_store:)
+        def initialize(name, namespace, file_path:, caller:, to: nil)
           @name = name
           @namespace = namespace
           @file_path = file_path
           @to = to
           @caller = caller
-          @data_store = data_store
+          @data_store = SourceRepresentation::DataStore.instance
         end
 
         def caller_namespace
