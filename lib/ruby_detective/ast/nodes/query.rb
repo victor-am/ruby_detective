@@ -8,6 +8,7 @@ module RubyDetective
           @node = node
         end
 
+        # TODO: accept multiple criteria
         def where(criteria = {})
           case
           when criteria.key?(:type)

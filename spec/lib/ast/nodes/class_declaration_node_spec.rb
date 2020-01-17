@@ -44,7 +44,7 @@ RSpec.describe RubyDetective::AST::Nodes::ClassDeclarationNode do
   end
 
   describe "type check methods" do
-    it "#class_declaration_node? returns false" do
+    it "#class_declaration_node? returns true" do
       expect(subject.class_declaration_node?).to eq(true)
     end
 
