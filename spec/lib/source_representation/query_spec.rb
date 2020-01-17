@@ -34,6 +34,7 @@ RSpec.describe RubyDetective::SourceRepresentation::Query do
   end
 
   before do
+    data_store.clear!
     data_store.classes = [simple_class, another_class]
     data_store.constants = [constant]
   end
