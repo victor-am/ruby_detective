@@ -16,7 +16,7 @@ module RubyDetective
       end
 
       def query
-        Query.new(self)
+        Query.new
       end
 
       def inspect
@@ -48,12 +48,12 @@ module RubyDetective
         end
       end
 
-      def register_constant(name, namespace, file_path:, caller:, to: nil)
+      def register_constant(name, namespace, file_path:, caller:, refers_to: nil)
         constant = Entities::Constant.new(
           name,
           namespace,
           caller: caller,
-          to: to,
+          refers_to: refers_to,
           file_path: file_path
         )
         @constants << constant

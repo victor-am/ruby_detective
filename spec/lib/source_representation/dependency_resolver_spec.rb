@@ -21,11 +21,11 @@ RSpec.describe RubyDetective::SourceRepresentation::DependencyResolver do
     )
 
     constant = RubyDetective::SourceRepresentation::Entities::Constant.new(
-      :AnotherClass,
+      :SomeConstant,
       [],
       file_path: "fixtures/simple_class.rb",
       caller: simple_class,
-      to: another_class
+      refers_to: another_class
     )
 
     data_store.classes = [simple_class, another_class]

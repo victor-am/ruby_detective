@@ -2,13 +2,13 @@ module RubyDetective
   module SourceRepresentation
     module Entities
       class Constant < Base
-        attr_reader :name, :namespace, :file_path, :caller, :to
+        attr_reader :name, :namespace, :file_path, :caller, :refers_to
 
-        def initialize(name, namespace, file_path:, caller:, to: nil)
+        def initialize(name, namespace, file_path:, caller:, refers_to: nil)
           @name = name
           @namespace = namespace
           @file_path = file_path
-          @to = to
+          @refers_to = refers_to
           @caller = caller
           @data_store = SourceRepresentation::DataStore.instance
         end
@@ -18,7 +18,7 @@ module RubyDetective
         end
 
         def register_referred_class(klass)
-          @to = klass
+          @refers_to = klass
         end
 
         def possible_paths_of_referenced_entity
