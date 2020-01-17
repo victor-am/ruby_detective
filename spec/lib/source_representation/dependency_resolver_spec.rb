@@ -22,28 +22,25 @@ RSpec.describe RubyDetective::SourceRepresentation::DependencyResolver do
 
     constant = RubyDetective::SourceRepresentation::Entities::Constant.new(
       :AnotherClass,
+      [],
       file_path: "fixtures/simple_class.rb",
-      at: simple_class,
+      caller: simple_class,
       to: another_class
     )
 
-    data_store.instance_variable_set(:@classes, [simple_class, another_class])
-    data_store.instance_variable_set(:@constants, [constant])
+    data_store.classes = [simple_class, another_class]
+    data_store.constants = [constant]
   end
 
   it "registers the correct dependencies on the class representations" do
-    subject = described_class.new(data_store)
-
-    subject.resolve_and_populate_store
+    described_class.resolve_and_populate_store
 
     expect(data_store.classes[0].dependencies.map(&:name)).to eq([:AnotherClass])
     expect(data_store.classes[1].dependencies.map(&:name)).to eq([])
   end
 
   it "registers the correct dependents on the class representations" do
-    subject = described_class.new(data_store)
-
-    subject.resolve_and_populate_store
+    described_class.resolve_and_populate_store
 
     expect(data_store.classes[0].dependents.map(&:name)).to eq([])
     expect(data_store.classes[1].dependents.map(&:name)).to eq([:SimpleClass])

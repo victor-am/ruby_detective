@@ -15,8 +15,8 @@ module RubyDetective
 
         def constants
           data_store
-            .query
-            .constants(where: { caller: self })
+          .query
+          .constants(where: { caller: self })
         end
 
         def dependencies

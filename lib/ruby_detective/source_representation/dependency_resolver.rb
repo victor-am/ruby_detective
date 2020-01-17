@@ -7,8 +7,8 @@ module RubyDetective
         @classes = DataStore.instance.classes
       end
 
-      def self.resolve_and_populate_store(*args)
-        new(*args).resolve_and_populate_store
+      def self.resolve_and_populate_store
+        new.resolve_and_populate_store
       end
 
       def resolve_and_populate_store
