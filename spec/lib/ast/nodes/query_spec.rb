@@ -1,6 +1,6 @@
 require './spec/spec_helper'
 
-RSpec.describe RubyDetective::AST::Query do
+RSpec.describe RubyDetective::AST::Nodes::Query do
   describe "#constant_references" do
     it "returns all the constants referenced in the node" do
       node = load_code_as_rich_ast_node(:simple_class)
