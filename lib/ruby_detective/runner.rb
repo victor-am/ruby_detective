@@ -5,7 +5,11 @@ module RubyDetective
     attr_reader :project_path, :classes, :modules
 
     def initialize(project_path)
-      @project_path = project_path
+      if [nil, "", " "].include? project_path
+        @project_path = "."
+      else
+        @project_path = project_path
+      end
     end
 
     def run
