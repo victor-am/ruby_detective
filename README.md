@@ -3,7 +3,7 @@
 
 Ruby Detective is a gem that parses your code, finds it's dependencies and outputs a interactive .html file that you can use to explore the dependency network of the code.
 
-This is the UI for the Ruby Detective project by the way :smile:
+This is the UI for the Ruby Detective project by the way:
 
 ![Preview](docs/preview.png?raw=true)
 
@@ -33,3 +33,5 @@ This should output an html file at the end that is completely self-contained, an
 - Click on a node to bring it's card to the top of the list on the left
 - Click twice on a node to add it to the graph, allowing to navigate through dependencies
 - Use the filters on the right to customize the graph, toggling off the "Show second-level dependency edges" option can be specially useful
+
+*This gem was inspired by @emad-elsaid library [rubrowser](https://github.com/emad-elsaid/rubrowser).*
