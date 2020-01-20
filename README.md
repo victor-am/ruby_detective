@@ -1,7 +1,7 @@
 # Ruby Detective
-### Investigating your project dependencies
+### Investigating your code dependencies
 
-Ruby Detective is a gem that parses your code, finds it's dependencies and outputs a interactive .html file that you can use to explore the dependency network of the code.
+Ruby Detective is a gem that parses your code, finds it's dependencies and outputs an interactive .html file that you can use to explore the dependency network of the code.
 
 This is the UI for the Ruby Detective project by the way:
 
@@ -13,7 +13,7 @@ This is the UI for the Ruby Detective project by the way:
 - Explorable and interactive network graph of the project dependencies
 - Graph nodes colored by namespace, making it easier to spot contexts
 - Useful information like lines of code, number of dependencies and dependents, etc
-- Fully self-contained .html file that can be easily shared
+- Outputs a fully self-contained .html file that can be easily shared
 
 ## Instalation
 ```
