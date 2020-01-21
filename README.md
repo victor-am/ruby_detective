@@ -5,7 +5,9 @@ Ruby Detective is a gem that parses your code, finds it's dependencies and outpu
 
 This is the UI for the Ruby Detective project by the way:
 
-![Preview](docs/preview.png?raw=true)
+### [Click here to access the live preview](https://victor-am.github.io/ruby_detective/preview.html)
+
+[![Preview](docs/preview.png?raw=true)](https://victor-am.github.io/ruby_detective/preview.html)
 
 ***:** Due to Ruby metaprogramming super-powers (and by extension Rails heavy use of those) it's unfeasible to find every single dependency, so we can only guarantee that explicit constants will be pointed as dependencies.
 
