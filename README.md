@@ -15,7 +15,7 @@ This is the UI for the Ruby Detective project by the way:
 - Useful information like lines of code, number of dependencies and dependents, etc
 - Outputs a fully self-contained .html file that can be easily shared
 
-## Instalation
+## Installation
 ```
 gem install ruby_detective
 ```
