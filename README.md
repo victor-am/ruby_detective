@@ -17,14 +17,14 @@ This is the UI for the Ruby Detective project by the way:
 
 ## Instalation
 ```
-gem install ruby-detective
+gem install ruby_detective
 ```
 
 ## Usage
 
 ```
 cd my-project-folder
-ruby-detective .
+ruby_detective .
 ```
 
 This should output an html file at the end that is completely self-contained, and can be shared around with your peers :D
