@@ -18,6 +18,8 @@ This is the UI for the Ruby Detective project by the way:
 - Outputs a fully self-contained .html file that can be easily shared
 
 ## Installation
+**Make sure you have Ruby 2.5 or higher installed (lower versions are not supported)**
+
 ```
 gem install ruby_detective
 ```
