@@ -8,16 +8,16 @@
     </div>
     <div class="extra-info">
       <p>
-        Dependencies
-        <span class="value">{{ klass.dependencies.length }}</span>
+        Dependents
+        <span class="value">{{ klass.dependents.length }}</span>
       </p>
       <p>
         LoC
         <span class="value">{{ klass.lines_of_code }}</span>
       </p>
       <p>
-        Dependents
-        <span class="value">{{ klass.dependents.length }}</span>
+        Dependencies
+        <span class="value">{{ klass.dependencies.length }}</span>
       </p>
     </div>
 
