@@ -3,3 +3,4 @@ tmp/
 spec/examples.txt
 coverage/
 ruby_detective.html
+ruby_detective-*.gem
