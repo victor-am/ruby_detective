@@ -22,10 +22,6 @@
     </div>
 
     <div class="action-bar">
-      <el-button class="graph-button" type="text" @click="$emit('clickMoreDetails', klass)">
-        More information
-      </el-button>
-
       <el-button class="graph-button" type="text" @click="$emit('clickToggleGraph', klass)">
         <GraphIcon/> {{ toggleGraphLabel }}
       </el-button>

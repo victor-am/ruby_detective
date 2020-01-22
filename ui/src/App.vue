@@ -23,7 +23,6 @@
         <li class="class-item" v-for="klass in filteredClasses" :key="klass.full_name" :ref="'class-card-' + klass.full_name">
           <ClassCard
             :klass="klass"
-            @clickMoreDetails="true"
             @clickToggleGraph="toggleClassFromGraph"
             :isSelected="isSelected(klass)"/>
         </li>
