@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "ruby_detective"
-  s.version     = "0.0.3"
+  s.version     = "0.1.0"
   s.date        = "2020-01-20"
   s.summary     = "Allows to investigate your ruby project dependency network"
   s.description = "Ruby Detective is a gem that parses your code, finds it's dependencies and outputs a interactive .html file that you can use to explore the dependency network of the code."
