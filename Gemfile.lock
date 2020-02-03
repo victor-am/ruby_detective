@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby_detective (0.0.3)
+    ruby_detective (0.1.0)
       parser (~> 2.6.5)
 
 GEM
